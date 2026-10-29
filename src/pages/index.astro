@@ -565,7 +565,7 @@ const faqDatos = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FA
 <style>
   /* Portada */
   .hero { padding: 130px 0 40px; overflow: hidden; }
-  .hero-in { position: relative; z-index: 2; display: grid; gap: 56px; align-items: center; }
+  .hero-in { position: relative; z-index: 2; display: grid; grid-template-columns: minmax(0, 1fr); gap: 56px; align-items: center; }
   .hero-vis { position: relative; display: flex; justify-content: center; padding: 10px 0 30px; }
   .hero-vis .movil.inclinado { transform: rotate(4deg); width: 290px; }
   .tarjeta { position: absolute; display: flex; align-items: center; gap: 14px; padding: 12px 20px 12px 12px; border-radius: 12px; white-space: nowrap; z-index: 3;
@@ -629,7 +629,7 @@ const faqDatos = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FA
   /* Móvil: las cuatro vistas en carrusel que se desliza (asoma la siguiente), con puntos y aviso */
   .carrusel-pie { display: none; }
   @media (max-width: 859px) {
-    .vista-txt .sig { display: none; }
+    .vista-txt .sig { display: none; } .vistas .btn { width: 100%; padding: 15px 14px; font-size: 13px; letter-spacing: .04em; gap: 8px; }
     .grupo small { display: none; }
     .grupo + .grupo { padding-left: 0; border-left: 0; }
     .pestanas { margin: 0 -20px 14px; padding: 2px 20px 6px; }
@@ -687,6 +687,8 @@ const faqDatos = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FA
   .an-img em { font-style: italic; font-weight: 500; color: var(--oro2); }
   .an-pie { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; font-size: 13px; background: #f3f4f6; }
   .an-pie b { flex: none; background: #e5e7eb; padding: 7px 12px; border-radius: 8px; font-size: 13px; }
+  /* Móviles muy estrechos: el anuncio y las tarjetas del ejemplo, un poco más pequeños para que quepan */
+  @media (max-width: 359px) { .an-pie { padding: 10px; font-size: 12px; } .an-pie b { padding: 6px 8px; font-size: 12px; } .vista-vis .flot { zoom: .82; right: 0; } }
   .linea { width: 100%; max-width: 420px; }
   .lpaso { position: relative; padding: 0 0 28px 52px; }
   .lpaso::before { content: ""; position: absolute; left: 8px; top: 4px; width: 18px; height: 18px; border-radius: 50%; background: var(--fondo); border: 2px solid rgba(198, 157, 99, .7); }

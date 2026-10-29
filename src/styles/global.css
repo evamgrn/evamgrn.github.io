@@ -56,6 +56,8 @@ section { position: relative; padding: 88px 0; }
 .btn.vidrio:hover { border-color: var(--oro); background: rgba(39, 35, 32, .7); }
 .btn svg { width: 18px; height: 18px; flex: none; }
 .botones { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+/* En el móvil los botones largos pasan a dos líneas en vez de cortarse */
+@media (max-width: 559px) { .btn { white-space: normal; text-align: center; letter-spacing: .06em; padding: 15px 20px; max-width: 100%; } }
 .sellos { display: flex; flex-wrap: wrap; gap: 6px 20px; margin-top: 20px; font-size: 14px; color: var(--tenue); }
 .sellos span::before { content: "✓ "; color: var(--oro); }
 
