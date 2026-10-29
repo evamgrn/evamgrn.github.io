@@ -7,17 +7,18 @@ Sitio estático hecho con Astro. Plan: `planes/2026-10-28-rediseno-web-teamvaxor
 - `src/config.ts`: WhatsApp, Calendly, correo, webhook del formulario y datos legales. Si cambia algo de esto, se cambia solo aquí.
 - `src/pages/`: una página por archivo (`index`, `consultoria`, `privacidad`, `aviso-legal`, `cookies`, `404`).
 - `src/layouts/Base.astro`: cabecera, menú, botón «Consultoría», WhatsApp flotante, pie y metadatos.
-- `src/styles/global.css`: colores, tipografías y piezas del estilo VAXOR (`salidas/2026-10-26-contenido/estilo-vaxor.md`).
-- `public/`: logos, favicon e imagen para compartir (`compartir.png`, se genera desde `../fuentes-imagenes/compartir.html` con Chrome sin cabeceras).
+- `src/styles/global.css`: colores y tipografías de la web (negro cálido, dorado #c69d63, EB Garamond en titulares, Inter en el texto). No es el estilo azul de Instagram.
+- `public/`: logos, favicon, foto del edificio (`img/`), `.nojekyll` (imprescindible para que GitHub publique `_astro/`) e imagen para compartir (`compartir.png`, se genera desde `../fuentes-imagenes/compartir.html` con Chrome sin cabeceras).
 
 ## Ver, compilar y publicar
 
 ```sh
 npx astro dev               # vista en local, se recarga al guardar (http://localhost:4321)
 npx astro build             # compila en dist/
-npx netlify-cli deploy --dir=dist           # vista previa con URL temporal
-npx netlify-cli deploy --dir=dist --prod    # publica en teamvaxor.es
+./publicar.sh               # compila y publica en GitHub Pages (tarda 1-2 min en verse)
 ```
+
+Alojamiento: **GitHub Pages**, cuenta `evamgrn`, repositorio público `evamgrn/evamgrn.github.io`. La rama `main` guarda el código y la rama `gh-pages`, la web compilada (la sobrescribe `publicar.sh`). Después de cambiar algo, sube también el código: `git add -A && git commit -m "…" && git push`. Netlify (proyecto «teamvaxor») se dejó de usar el 29/10 porque el plan gratuito pone «Powered by Netlify» y no se puede quitar.
 
 Node 22.23 en el Mac: Astro va fijado en la 6.4.8 (la 7 pide Node 22.23.4 o superior).
 
