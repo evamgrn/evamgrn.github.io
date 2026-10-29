@@ -152,6 +152,7 @@ const faqDatos = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FA
           </div>
         </div>
 
+        <div class="vistas" id="vistas">
         <div class="cristal vista" role="tabpanel" id="v-captacion" aria-labelledby="p-captacion">
           <div class="vista-txt">
             <span class="vnum">01 · Captación</span>
@@ -175,7 +176,6 @@ const faqDatos = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FA
             <div class="cristal tarjeta flot anim-i" style="--i:2"><div class="ic oro"><Icono n="personas" /></div><div><b>Nuevo propietario</b><small>Quiere vender · 3 hab. · centro</small></div></div>
             <span class="ejemplo ej-vista">Ejemplo</span>
           </div>
-          <div class="v-nav"><span></span><span class="v-pos">1 / 4</span><button class="v-btn sig2" type="button" data-sig="respuesta">Respuesta →</button></div>
         </div>
 
         <div class="cristal vista" role="tabpanel" id="v-respuesta" aria-labelledby="p-respuesta" hidden>
@@ -200,7 +200,6 @@ const faqDatos = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FA
             <div class="cristal tarjeta flot anim-i" style="--i:5"><div class="ic"><Icono n="calendario" /></div><div><b>Mañana, 10:00</b><small>Llamada · alquiler zona estación</small></div></div>
             <span class="ejemplo ej-vista">Ejemplo</span>
           </div>
-          <div class="v-nav"><button class="v-btn" type="button" data-sig="captacion">← Captación</button><span class="v-pos">2 / 4</span><button class="v-btn sig2" type="button" data-sig="seguimiento">Seguimiento →</button></div>
         </div>
 
         <div class="cristal vista" role="tabpanel" id="v-seguimiento" aria-labelledby="p-seguimiento" hidden>
@@ -223,7 +222,6 @@ const faqDatos = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FA
               <div class="lpaso fin anim-i" style="--i:3"><small>RESPONDE</small><b>Te llega el aviso</b><span>Y lo retomas tú</span></div>
             </div>
           </div>
-          <div class="v-nav"><button class="v-btn" type="button" data-sig="respuesta">← Respuesta</button><span class="v-pos">3 / 4</span><button class="v-btn sig2" type="button" data-sig="avisos">Avisos →</button></div>
         </div>
 
         <div class="cristal vista" role="tabpanel" id="v-avisos" aria-labelledby="p-avisos" hidden>
@@ -244,7 +242,11 @@ const faqDatos = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FA
             <div class="aviso anim-i" style="--i:1"><div class="ic"><Icono n="telefono" /></div><div><small>HACE 12 MIN</small><b>Quiere que le llames</b><span>Marcos, propietario · vender casa</span></div></div>
             <div class="aviso anim-i" style="--i:2"><div class="ic"><Icono n="lista" /></div><div><small>8:00</small><b>Tu resumen de hoy</b><span>2 llamadas, 1 visita y 3 contactos nuevos</span></div></div>
           </div>
-          <div class="v-nav"><button class="v-btn" type="button" data-sig="seguimiento">← Seguimiento</button><span class="v-pos">4 / 4</span><a class="v-btn sig2" href="/consultoria">Consultoría →</a></div>
+        </div>
+        </div>
+        <div class="carrusel-pie" aria-hidden="true">
+          <div class="puntos">{servicios.map((_, i) => <i class={i === 0 ? 'activo' : ''}></i>)}</div>
+          <span class="desliza">Desliza para ver los 4 pasos <b>→</b></span>
         </div>
       </div>
     </div>
@@ -425,19 +427,34 @@ const faqDatos = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FA
     document.querySelector('.prob-cab')!.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
-  // Pestañas de «Qué hacemos»
+  // Pestañas de «Qué hacemos». En el ordenador muestran una vista cada vez; en el móvil las vistas son un carrusel que se desliza
   const tabs = [...document.querySelectorAll<HTMLButtonElement>('.pestanas [role=tab]')];
-  const elegir = (t: HTMLButtonElement, foco = false) => {
-    tabs.forEach(x => {
-      const sel = x === t;
-      x.setAttribute('aria-selected', String(sel));
-      x.tabIndex = sel ? 0 : -1;
-      document.getElementById(x.getAttribute('aria-controls')!)!.hidden = !sel;
-    });
-    if (foco) t.focus();
-    const bar = document.querySelector<HTMLElement>('.pestanas');
-    if (bar) bar.scrollTo({ left: t.offsetLeft - 20, behavior: 'smooth' });
+  const barra = document.querySelector<HTMLElement>('.pestanas')!;
+  const carrusel = document.getElementById('vistas')!;
+  const vistas = tabs.map(t => document.getElementById(t.getAttribute('aria-controls')!)!);
+  const puntos = [...document.querySelectorAll<HTMLElement>('.puntos i')];
+  const movil = matchMedia('(max-width: 859px)');
+  const marcar = (n: number) => {
+    tabs.forEach((x, i) => { x.setAttribute('aria-selected', String(i === n)); x.tabIndex = i === n ? 0 : -1; });
+    vistas.forEach((v, i) => { v.classList.toggle('activa', i === n); if (!movil.matches) v.hidden = i !== n; });
+    puntos.forEach((d, i) => d.classList.toggle('activo', i === n));
+    barra.scrollTo({ left: tabs[n].offsetLeft - 20, behavior: 'smooth' });
   };
+  const elegir = (t: HTMLButtonElement, foco = false) => {
+    const n = tabs.indexOf(t);
+    if (movil.matches) carrusel.scrollTo({ left: vistas[n].offsetLeft - carrusel.offsetLeft - 20, behavior: 'smooth' });
+    marcar(n);
+    if (foco) t.focus();
+  };
+  const ajustar = () => { vistas.forEach(v => (v.hidden = movil.matches ? false : !v.classList.contains('activa'))); };
+  marcar(0);
+  movil.addEventListener('change', ajustar); ajustar();
+  // En el móvil, la tarjeta que se ve marca la pestaña y el punto; el aviso «Desliza» se va al primer deslizamiento
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (movil.matches && e.isIntersecting) marcar(vistas.indexOf(e.target as HTMLElement));
+  }), { root: carrusel, threshold: 0.6 });
+  vistas.forEach(v => io.observe(v));
+  carrusel.addEventListener('scroll', () => { if (carrusel.scrollLeft > 30) carrusel.parentElement!.classList.add('deslizado'); }, { passive: true });
   const porId = (id: string) => tabs.find(t => t.id === 'p-' + id);
   tabs.forEach((t, i) => {
     t.addEventListener('click', () => elegir(t));
@@ -446,30 +463,12 @@ const faqDatos = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FA
       if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); elegir(tabs[(i - 1 + tabs.length) % tabs.length], true); }
     });
   });
-  // En el móvil: la pestaña elegida siempre a la vista en la barra, y deslizar el dedo para cambiar de paso
-  const movil = matchMedia('(max-width: 859px)');
-  const barra = document.querySelector<HTMLElement>('.pestanas')!;
-  tabs.forEach(t => t.addEventListener('focus', () => barra.scrollTo({ left: t.offsetLeft - 20, behavior: 'smooth' })));
-  let x0 = 0, y0 = 0;
-  document.querySelectorAll<HTMLElement>('.vista').forEach(v => {
-    v.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
-    v.addEventListener('touchend', e => {
-      const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
-      if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
-      const i = tabs.findIndex(t => t.getAttribute('aria-selected') === 'true');
-      const n = i + (dx < 0 ? 1 : -1);
-      if (n >= 0 && n < tabs.length) { elegir(tabs[n]); barra.scrollTo({ left: tabs[n].offsetLeft - 20, behavior: 'smooth' }); }
-    }, { passive: true });
-  });
-
-  // «Siguiente» dentro de cada vista y los cuatro pasos de la portada
+  // «Siguiente» dentro de cada vista (ordenador) y los cuatro pasos de la portada
   document.querySelectorAll<HTMLElement>('[data-sig], [data-ir]').forEach(b => b.addEventListener('click', () => {
     const t = porId(b.dataset.sig || b.dataset.ir!);
     if (!t) return;
     elegir(t);
-    if (!b.dataset.sig) return;
-    if (movil.matches) document.getElementById(t.getAttribute('aria-controls')!)!.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    else document.querySelector('.pestanas')!.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (b.dataset.sig) barra.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }));
 
   // Cómo trabajamos: pasos que avanzan solos mientras se ven, hasta que alguien toca uno
@@ -627,22 +626,31 @@ const faqDatos = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FA
   .pestanas button[aria-selected="true"] { color: #0f0d0b; background: var(--oro); border-color: var(--oro); }
   .pestanas button[aria-selected="true"] span { color: #0f0d0b; }
   .vista { display: grid; gap: 32px; padding: 28px 22px; overflow: hidden; animation: entra .45s ease; }
-  /* Navegación al final de cada paso: solo en el móvil (en el ordenador está el «Siguiente» del texto) */
-  .v-nav { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 18px; border-top: 1px solid var(--linea); }
-  .v-btn { background: none; border: 1px solid var(--linea); border-radius: 4px; padding: 11px 14px; cursor: pointer; text-decoration: none;
-    font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--suave); }
-  .v-btn.sig2 { background: var(--oro); border-color: var(--oro); color: #0f0d0b; }
-  .v-pos { font-family: var(--t); font-style: italic; font-size: 18px; color: var(--oro); }
-  @media (min-width: 860px) { .v-nav { display: none; } }
+  /* Móvil: las cuatro vistas en carrusel que se desliza (asoma la siguiente), con puntos y aviso */
+  .carrusel-pie { display: none; }
   @media (max-width: 859px) {
     .vista-txt .sig { display: none; }
-    .vista { scroll-margin-top: 140px; }
-    .pestanas { position: sticky; top: 68px; z-index: 5; margin: 0 -20px 16px; padding: 10px 20px; background: rgba(21, 19, 16, .96);
-      backdrop-filter: blur(10px); border-bottom: 1px solid var(--linea); }
     .grupo small { display: none; }
     .grupo + .grupo { padding-left: 0; border-left: 0; }
+    .pestanas { margin: 0 -20px 14px; padding: 2px 20px 6px; }
     .pestanas button { padding: 10px 14px; font-size: 14px; }
+    .vistas { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -20px; padding: 0 20px 4px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .vistas::-webkit-scrollbar { display: none; }
+    .vistas .vista, .vistas .vista[hidden] { display: grid !important; grid-template-columns: minmax(0, 1fr); min-width: 0; flex: 0 0 86%; scroll-snap-align: center; animation: none; padding: 24px 18px; gap: 24px; align-content: start; }
+    .vistas .vista:not(.activa) .anim-i { animation: none; }
+    .vlista li { font-size: 15px; }
+    .vista-vis .movil { width: 240px; }
+    .accion { display: flex; flex-direction: column; }
+    .pestanas { order: 0; } .carrusel-pie { order: 1; } .vistas { order: 2; }
+    .carrusel-pie { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 14px; }
+    .puntos { display: flex; gap: 8px; }
+    .puntos i { width: 8px; height: 8px; border-radius: 8px; background: var(--sup2); transition: width .3s, background .3s; }
+    .puntos i.activo { width: 24px; background: var(--oro); }
+    .desliza { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--oro2); transition: opacity .4s; }
+    .desliza b { display: inline-block; animation: empuja 1.2s ease-in-out infinite; }
+    .deslizado .desliza { opacity: 0; }
   }
+  @keyframes empuja { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(6px); } }
   @keyframes entra { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
   @media (prefers-reduced-motion: reduce) { .vista, .cambios .cara { animation: none; } }
   @media (min-width: 860px) { .vista { grid-template-columns: 1fr 1fr; align-items: center; padding: 48px; min-height: 580px; } }
