@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import { LEGAL, SITIO } from '../config';
+---
+<Base titulo="Aviso legal" descripcion="Datos del titular de teamvaxor.es y condiciones de uso de la web.">
+  <section style="padding-top: 140px">
+    <div class="cont texto">
+      <h1>Aviso legal</h1>
+      <p class="fecha">Última actualización: {LEGAL.actualizado}</p>
+
+      <h2>1. Titular de la web</h2>
+      <p>En cumplimiento del artículo 10 de la Ley 34/2002, de servicios de la sociedad de la información y de comercio electrónico (LSSI), estos son los datos del titular de {SITIO.url}:</p>
+      <ul>
+        <li><b>Titular:</b> {LEGAL.titular}, profesional autónoma que opera con el nombre comercial VAXOR</li>
+        <li><b>NIF:</b> {LEGAL.nif}</li>
+        <li><b>Domicilio:</b> {LEGAL.domicilio}</li>
+        <li><b>Correo electrónico:</b> <a href={`mailto:${LEGAL.email}`}>{LEGAL.email}</a></li>
+        <li><b>Actividad:</b> servicios de captación de clientes y de atención y seguimiento de contactos para inmobiliarias</li>
+      </ul>
+
+      <h2>2. Condiciones de uso</h2>
+      <p>El acceso a esta web es gratuito y atribuye la condición de usuario. El usuario se compromete a hacer un uso adecuado de los contenidos, de acuerdo con la ley y la buena fe, y a no emplearlos para actividades ilícitas o que puedan dañar a VAXOR o a terceros.</p>
+      <p>La información de esta web es orientativa. Las condiciones de cada servicio se concretan en la propuesta que se envía a cada cliente.</p>
+
+      <h2>3. Propiedad intelectual e industrial</h2>
+      <p>Los textos, diseños, logotipos e imágenes de esta web son de VAXOR o se usan con permiso. No se pueden reproducir, distribuir ni transformar sin autorización expresa, salvo para uso personal y privado.</p>
+
+      <h2>4. Responsabilidad</h2>
+      <p>VAXOR trabaja para que la información de la web sea correcta y esté actualizada, pero no se hace responsable de los errores u omisiones que pudiera contener ni de las interrupciones del servicio por causas ajenas. Los enlaces a otras webs se ofrecen como referencia; VAXOR no controla su contenido.</p>
+
+      <h2>5. Protección de datos y cookies</h2>
+      <p>El tratamiento de los datos personales se explica en la <a href="/privacidad">política de privacidad</a>, y el uso de cookies, en la <a href="/cookies">política de cookies</a>.</p>
+
+      <h2>6. Ley aplicable</h2>
+      <p>Este aviso legal se rige por la legislación española. Para cualquier controversia, las partes se someten a los juzgados y tribunales que correspondan según la ley.</p>
+    </div>
+  </section>
+</Base>

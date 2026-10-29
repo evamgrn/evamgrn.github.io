@@ -1,0 +1,155 @@
+---
+import '@fontsource-variable/eb-garamond/wght.css';
+import '@fontsource-variable/eb-garamond/wght-italic.css';
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+import { SITIO, CONTACTO } from '../config';
+import IconoWhatsApp from '../components/IconoWhatsApp.astro';
+
+interface Props { titulo?: string; descripcion?: string; noindex?: boolean }
+const { titulo, descripcion = SITIO.descripcion, noindex = false } = Astro.props;
+const tituloCompleto = titulo ? `${titulo} · VAXOR` : SITIO.nombre;
+const canonica = new URL(Astro.url.pathname, SITIO.url).href;
+const imagen = new URL('/compartir.png', SITIO.url).href;
+const enInicio = Astro.url.pathname === '/';
+const ancla = (id: string) => (enInicio ? `#${id}` : `/#${id}`);
+const anio = new Date().getFullYear();
+---
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{tituloCompleto}</title>
+  <meta name="description" content={descripcion} />
+  <link rel="canonical" href={canonica} />
+  {noindex && <meta name="robots" content="noindex" />}
+  <meta name="theme-color" content="#0f0d0b" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="es_ES" />
+  <meta property="og:site_name" content="VAXOR" />
+  <meta property="og:title" content={tituloCompleto} />
+  <meta property="og:description" content={descripcion} />
+  <meta property="og:url" content={canonica} />
+  <meta property="og:image" content={imagen} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={tituloCompleto} />
+  <meta name="twitter:description" content={descripcion} />
+  <meta name="twitter:image" content={imagen} />
+  <script is:inline>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+  <a class="saltar" href="#principal">Ir al contenido</a>
+  <header class="cab" id="cabecera">
+    <div class="cont cab-in">
+      <a class="logo" href="/" aria-label="VAXOR, inicio">
+        <img src="/logo/vaxor-dorado.svg" alt="" width="34" height="34" />
+        <span>VAXOR<small>Sistemas para inmobiliarias</small></span>
+      </a>
+      <nav class="menu" id="menu" aria-label="Principal">
+        <a href={ancla('que-hacemos')}>Qué hacemos</a>
+        <a href={ancla('diagnostico')}>Diagnóstico</a>
+        <a href={ancla('como-trabajamos')}>Cómo trabajamos</a>
+        <a href={ancla('preguntas')}>Preguntas</a>
+        <a class="solo-movil" href={CONTACTO.whatsapp} target="_blank" rel="noopener">WhatsApp</a>
+      </nav>
+      <a class="btn oro cab-btn" href="/consultoria">Consultoría</a>
+      <button class="hamb" id="hamb" aria-label="Abrir el menú" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main id="principal">
+    <slot />
+  </main>
+
+  <footer class="pie">
+    <div class="cont">
+      <div class="pie-arriba">
+        <div>
+          <div class="pie-marca"><img src="/logo/vaxor-dorado.svg" alt="" width="30" height="30" />VAXOR · SISTEMAS PARA INMOBILIARIAS</div>
+          <p class="pie-lema">Sistemas que traen clientes a tu inmobiliaria y no dejan que se escape ninguno.</p>
+        </div>
+        <div class="pie-contacto">
+          <a href={`mailto:${CONTACTO.email}`}>{CONTACTO.email}</a>
+          <a href={CONTACTO.whatsapp} target="_blank" rel="noopener">WhatsApp {CONTACTO.whatsappNumero}</a>
+          <a href="/consultoria">Solicitar consultoría</a>
+        </div>
+      </div>
+      <div class="pie-abajo">
+        <nav aria-label="Legal"><a href="/aviso-legal">Aviso legal</a><a href="/privacidad">Privacidad</a><a href="/cookies">Cookies</a></nav>
+        <span>© {anio} VAXOR</span>
+      </div>
+    </div>
+  </footer>
+
+  <a class="wa-flot" href={CONTACTO.whatsapp} target="_blank" rel="noopener" aria-label="Escríbeme por WhatsApp">
+    <IconoWhatsApp />
+  </a>
+
+  <script>
+    const cab = document.getElementById('cabecera')!;
+    const hamb = document.getElementById('hamb')!;
+    const menu = document.getElementById('menu')!;
+    const marcar = () => cab.classList.toggle('fija', scrollY > 10);
+    marcar(); addEventListener('scroll', marcar, { passive: true });
+    hamb.addEventListener('click', () => {
+      const abierto = cab.classList.toggle('abierto');
+      hamb.setAttribute('aria-expanded', String(abierto));
+    });
+    menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { cab.classList.remove('abierto'); hamb.setAttribute('aria-expanded', 'false'); }));
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('ver'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
+    document.querySelectorAll('.rev').forEach(el => io.observe(el));
+  </script>
+</body>
+</html>
+
+<style is:global>
+  .saltar { position: absolute; left: -999px; top: 8px; z-index: 300; background: var(--oro); color: #1a1206; padding: 8px 14px; border-radius: 8px; }
+  .saltar:focus { left: 8px; }
+  .cab { position: fixed; top: 0; left: 0; right: 0; z-index: 200; transition: background .3s, border-color .3s; border-bottom: 1px solid transparent; }
+  .cab.fija, .cab.abierto { background: rgba(15, 13, 11, .86); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom-color: var(--linea); }
+  .cab-in { display: flex; align-items: center; gap: 24px; height: 68px; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--t); font-weight: 600; font-size: 22px; letter-spacing: .14em; line-height: 1; }
+  .logo small { display: block; margin-top: 4px; font-family: var(--f); font-weight: 500; font-size: 9.5px; letter-spacing: .24em; text-transform: uppercase; color: var(--tenue); }
+  .menu { display: flex; gap: 28px; margin-left: auto; }
+  .menu a { text-decoration: none; font-size: 15px; color: var(--suave); transition: color .2s; }
+  .menu a:hover { color: #fff; }
+  .menu .solo-movil { display: none; }
+  .cab-btn { padding: 11px 18px; font-size: 12px; }
+  .hamb { display: none; background: none; border: 0; width: 40px; height: 40px; cursor: pointer; position: relative; }
+  .hamb span { position: absolute; left: 9px; right: 9px; height: 2px; background: #fff; border-radius: 2px; transition: transform .25s, top .25s; }
+  .hamb span:first-child { top: 15px; } .hamb span:last-child { top: 23px; }
+  .abierto .hamb span:first-child { top: 19px; transform: rotate(45deg); }
+  .abierto .hamb span:last-child { top: 19px; transform: rotate(-45deg); }
+  @media (max-width: 899px) {
+    .cab-in { gap: 10px; }
+    .hamb { display: block; }
+    .cab-btn { margin-left: auto; padding: 10px 14px; font-size: 11px; }
+    .logo small { display: none; }
+    .menu { display: none; position: absolute; top: 68px; left: 0; right: 0; flex-direction: column; gap: 0; padding: 8px 20px 20px;
+            background: rgba(15, 13, 11, .97); border-bottom: 1px solid var(--linea); }
+    .abierto .menu { display: flex; }
+    .menu a { padding: 14px 0; font-size: 17px; border-bottom: 1px solid var(--linea); }
+    .menu .solo-movil { display: block; border-bottom: 0; color: var(--oro2); }
+  }
+
+  .pie { border-top: 1px solid var(--linea); padding: 56px 0 100px; background: #0b0a08; }
+  .pie-arriba { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 32px; }
+  .pie-marca { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 13px; letter-spacing: .2em; color: var(--oro2); }
+  .pie-lema { color: var(--tenue); margin-top: 14px; max-width: 420px; font-size: 15px; }
+  .pie-contacto { display: flex; flex-direction: column; gap: 8px; font-size: 15px; }
+  .pie-contacto a, .pie-abajo a { color: var(--suave); text-decoration: none; }
+  .pie-contacto a:hover, .pie-abajo a:hover { color: var(--oro2); }
+  .pie-abajo { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--linea); font-size: 14px; color: var(--tenue); }
+  .pie-abajo nav { display: flex; flex-wrap: wrap; gap: 20px; }
+
+  .wa-flot { position: fixed; right: 18px; bottom: 18px; z-index: 150; width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center;
+             background: var(--wa); color: #fff; box-shadow: 0 10px 30px rgba(0, 0, 0, .4); transition: transform .2s; }
+  .wa-flot:hover { transform: scale(1.06); }
+  .wa-flot svg { width: 32px; height: 32px; }
+</style>

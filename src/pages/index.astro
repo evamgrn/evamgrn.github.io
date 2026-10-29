@@ -1,0 +1,789 @@
+---
+import Base from '../layouts/Base.astro';
+import Icono from '../components/Icono.astro';
+import IconoWhatsApp from '../components/IconoWhatsApp.astro';
+import Movil from '../components/Movil.astro';
+import { CONTACTO } from '../config';
+
+const waResultados = CONTACTO.whatsapp.split('?')[0] + '?text=' + encodeURIComponent('Hola Eva, me gustaría ver resultados de vuestras campañas');
+
+const problemas = [
+  { t: 'Escriben fuera de horario', d: 'Un propietario escribe a las 21:00 y nadie le contesta hasta el día siguiente. Para entonces, puede que ya haya llamado a otra inmobiliaria.',
+    ct: 'Respuesta al momento', cd: 'Quien escribe a las 21:00 recibe respuesta en ese momento, y la llamada queda en tu calendario.' },
+  { t: 'Se pierden entre chats', d: 'Le contestas, pero no lo apuntas. A los dos días su conversación está debajo de otras veinte.',
+    ct: 'Todo en un solo sitio', cd: 'Cada contacto queda apuntado con lo que busca y en qué punto está, venga de WhatsApp, de los portales o de la web.' },
+  { t: 'El seguimiento depende de la memoria', d: 'Si nadie se acuerda de volver a escribir, el contacto se enfría.',
+    ct: 'Seguimiento sin depender de nadie', cd: 'Si no contesta, recibe otro mensaje a los dos días y otro a la semana. Nadie tiene que acordarse.' },
+  { t: 'Faltan propietarios', d: 'Sin producto no hay operaciones, y esperar a que llamen no siempre basta.',
+    ct: 'Propietarios que llegan a ti', cd: 'Campañas en tu zona para que te escriban propietarios que quieren vender o alquilar.' },
+];
+const servicios = [
+  { id: 'captacion', t: 'Captación' },
+  { id: 'respuesta', t: 'Respuesta al momento' },
+  { id: 'seguimiento', t: 'Seguimiento' },
+  { id: 'avisos', t: 'Avisos en tu móvil' },
+];
+const preguntas = [
+  { area: 'captacion', p: '¿Cuántos propietarios que quieren vender o alquilar te entran al mes?',
+    o: ['Los que necesito', 'Algunos, pero me faltan', 'Casi ninguno'] },
+  { area: 'captacion', p: 'Aparte de los portales, ¿haces algo para captar propietarios?',
+    o: ['Sí, campañas o acciones propias', 'A veces, sin constancia', 'No, espero a que llamen'] },
+  { area: 'respuesta', p: 'Si alguien te escribe un sábado a las 22:00, ¿cuándo recibe respuesta?',
+    o: ['Al momento', 'Al día siguiente', 'Cuando alguien puede, a veces días después'] },
+  { area: 'respuesta', p: '¿Quién contesta los mensajes de WhatsApp y de los portales?',
+    o: ['Alguien encargado, y lo cubre todo', 'Quien puede, entre visita y visita', 'Yo, cuando tengo un hueco'] },
+  { area: 'seguimiento', p: 'Si un contacto no contesta a tu mensaje, ¿qué pasa después?',
+    o: ['Tiene un seguimiento pautado', 'Depende de si alguien se acuerda', 'Normalmente se queda ahí'] },
+  { area: 'seguimiento', p: '¿Tienes todos los contactos en un solo sitio, sabiendo en qué punto está cada uno?',
+    o: ['Sí, todo en un sitio', 'Repartidos entre WhatsApp, correo y portales', 'No lo tengo claro'] },
+];
+const areas = [
+  { id: 'captacion', t: 'Captación' },
+  { id: 'respuesta', t: 'Respuesta' },
+  { id: 'seguimiento', t: 'Seguimiento' },
+];
+const pasos = [
+  { ic: 'telefono', corto: 'Consultoría', t: 'Hablamos 20 minutos', d: 'Me cuentas cómo trabajáis y vemos dónde se os escapan clientes.',
+    chips: ['Por teléfono o videollamada', 'Gratis', 'Sin compromiso'] },
+  { ic: 'lista', corto: 'Propuesta', t: 'Te propongo solo lo que necesitas', d: 'Por escrito y con el precio cerrado. Lo decides con calma.',
+    chips: ['A tu medida', 'Precio cerrado', 'Sin permanencia'] },
+  { ic: 'check', corto: 'Puesta en marcha', t: 'Nos ponemos desde el primer día', d: 'Nos encargamos de toda la parte técnica. Tú sigues trabajando como siempre.',
+    chips: ['Desde el día 1', 'Sin complicarte', 'Con tu WhatsApp y tu calendario'] },
+  { ic: 'grafico', corto: 'Cada mes', t: 'Informe y mejoras cada mes', d: 'Ves qué ha llegado, qué se ha respondido y qué mejoramos.',
+    chips: ['Informe mensual', 'Ajustes continuos', 'Trato directo conmigo'] },
+];
+const faqs = [
+  { p: '¿Para quién es?', r: 'Para inmobiliarias que quieren más propietarios y compradores, y para las que reciben contactos por WhatsApp, Idealista o Fotocasa y saben que algunos se quedan sin respuesta.' },
+  { p: '¿Necesito saber de tecnología?', r: 'No. Nosotros lo diseñamos, lo ponemos en marcha y nos encargamos de la parte técnica. Tu equipo sigue usando WhatsApp y su calendario.' },
+  { p: '¿Cuánto tiempo me va a quitar?', r: 'Muy poco. Al principio, la llamada para entender cómo trabajáis y algo de material de tu inmobiliaria (fotos, zonas, lo que ofrecéis). Después, tu tiempo va a lo importante: hablar con quien ya está interesado.' },
+  { p: '¿Cuánto tarda en estar funcionando?', r: 'Nos ponemos con ello desde el primer día. Cuánto tarda todo depende de lo que haga falta: en la propuesta te damos las fechas, y empezamos por lo que antes se nota.' },
+  { p: '¿Funciona con Idealista y Fotocasa?', r: 'Sí. Recogemos los contactos que te llegan de los portales para que también reciban respuesta y seguimiento. Si usas un programa de gestión como Inmovilla, vemos cómo conectarlo.' },
+  { p: '¿Los mensajes suenan a mi inmobiliaria?', r: 'Sí. Los preparamos contigo, con tu forma de hablar y la información de tu inmobiliaria. Y en cuanto alguien quiere visita o llamada, lo retomas tú.' },
+  { p: '¿Cuánto cuesta?', r: 'Depende de lo que necesites. No trabajamos con tarifas cerradas porque cada inmobiliaria es distinta: en la consultoría vemos tu situación y te digo qué tiene sentido y cuánto cuesta, sin compromiso.' },
+  { p: '¿Puedo ver resultados de vuestras campañas?', r: 'Sí. Escríbeme por WhatsApp y te enseño resultados de campañas que hemos hecho.' },
+  { p: '¿Trabajáis en toda España?', r: 'Sí. Trabajamos en remoto con inmobiliarias de toda España, y las campañas se hacen para tu zona.' },
+  { p: '¿Hay permanencia?', r: 'No. Si no te convence, lo dejas, sin penalizaciones.' },
+];
+const faqDatos = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: faqs.map(f => ({ '@type': 'Question', name: f.p, acceptedAnswer: { '@type': 'Answer', text: f.r } })) });
+---
+<Base>
+  <!-- 1. Portada -->
+  <section class="hero">
+    <div class="foto" aria-hidden="true"><img src="/img/edificio.webp" srcset="/img/edificio-960.webp 960w, /img/edificio.webp 1920w" sizes="100vw" alt="" width="1920" height="1081" fetchpriority="high" /></div>
+    <div class="cont hero-in">
+      <div class="hero-txt">
+        <h1 class="tit xl">Tu inmobiliaria está perdiendo operaciones <em>mientras duermes.</em></h1>
+        <p class="ent">Te traemos clientes interesados y nos aseguramos de que no se escape ninguno: ni el propietario que escribe a las 23:00 ni el comprador que pregunta un domingo.</p>
+        <div class="botones">
+          <a class="btn oro" href="/consultoria">Solicitar consultoría <Icono n="flecha" /></a>
+          <a class="btn vidrio" href="#diagnostico">Hacer el diagnóstico</a>
+        </div>
+        <div class="sellos"><span>Sin compromiso</span><span>Sin permanencia</span><span>Trato directo conmigo</span></div>
+      </div>
+      <div class="hero-vis">
+        <Movil clase="inclinado fundido" hora="23:14" nombre="Propietaria" inicial="P" mensajes={[
+          { de: 'el', texto: 'Hola, estoy pensando en vender mi piso. ¿Cuánto podría valer?', hora: '23:14' },
+          { de: 'tu', texto: 'Hola! Gracias por escribirnos. Para darte una idea, me dices en qué zona está y cuántas habitaciones tiene?', hora: '23:14' },
+          { de: 'el', texto: 'En el centro, 3 habitaciones con terraza', hora: '23:16' },
+          { de: 'tu', texto: 'Perfecto. Te llamamos mañana a las 10:00 para verlo con calma. Te va bien?', hora: '23:16' },
+          { de: 'el', texto: 'Sí, perfecto', hora: '23:17' },
+        ]} />
+        <div class="cristal tarjeta t1 anim-i" style="--i:2"><div class="ic oro"><Icono n="check" /></div><div><b>Respondido al momento</b><small>23:14 · Propietaria, centro</small></div></div>
+        <div class="cristal tarjeta t2 anim-i" style="--i:5"><div class="ic"><Icono n="calendario" /></div><div><b>Llamada mañana, 10:00</b><small>Ya en tu calendario</small></div></div>
+        <span class="ejemplo ej-hero">Ejemplo</span>
+      </div>
+    </div>
+    <div class="cont">
+      <ol class="pilares rev">
+        {servicios.map((s, i) => <li><a href="#que-hacemos" data-ir={s.id}><span>0{i + 1}</span>{s.t}</a></li>)}
+      </ol>
+    </div>
+  </section>
+
+  <!-- 2. Lo que no se ve (comparador sin sistema / con VAXOR) -->
+  <section class="problema">
+    <div class="cont">
+      <div class="prob-cab">
+        <div class="cabeza rev">
+          <span class="etq">Lo que no se ve</span>
+          <h2 class="tit">Cada contacto sin respuesta <em>es una operación que se va a otra.</em></h2>
+        </div>
+        <div class="interruptor rev" role="group" aria-label="Comparar cómo cambia">
+          <button type="button" data-modo="sin" aria-pressed="true">Sin sistema</button>
+          <button type="button" data-modo="con" aria-pressed="false">Con VAXOR</button>
+        </div>
+      </div>
+      <div class="rejilla-2 cambios" id="cambios" data-modo="sin" aria-live="polite">
+        {problemas.map(p => (
+          <div class="cristal item rev">
+            <div class="cara sin"><div class="ic rojo"><Icono n="x" /></div><div><h3 class="h3">{p.t}</h3><p>{p.d}</p></div></div>
+            <div class="cara con"><div class="ic oro"><Icono n="check" /></div><div><h3 class="h3">{p.ct}</h3><p>{p.cd}</p></div></div>
+          </div>
+        ))}
+      </div>
+      <p class="remate rev">No es un problema de tu equipo. Es un problema de sistema, <b>y tiene solución.</b> <button type="button" class="sig" data-modo-ir="con">Ver cómo cambia <Icono n="flecha" /></button></p>
+    </div>
+  </section>
+
+  <!-- 3. Qué hacemos (pestañas, en dos áreas) -->
+  <section id="que-hacemos" class="fondo-alt">
+    <div class="cont">
+      <div class="cabeza centro rev">
+        <span class="etq">Qué hacemos</span>
+        <h2 class="tit">Más clientes que llegan a&nbsp;ti, <em>y ninguno sin respuesta.</em></h2>
+        <p class="ent">Dos áreas que funcionan juntas o por separado: tú eliges por dónde empezar. Toca cada paso para ver cómo funciona en el día a día.</p>
+      </div>
+      <div class="accion rev">
+        <div class="pestanas" role="tablist" aria-label="Qué hacemos">
+          <div class="grupo" role="presentation">
+            <small aria-hidden="true">Conseguir clientes</small>
+            <div class="g-btns" role="presentation">
+              <button role="tab" id="p-captacion" aria-controls="v-captacion" aria-selected="true"><span>01</span>Captación</button>
+            </div>
+          </div>
+          <div class="grupo" role="presentation">
+            <small aria-hidden="true">Que no se escape ninguno</small>
+            <div class="g-btns" role="presentation">
+              {servicios.slice(1).map((s, i) => (
+                <button role="tab" id={`p-${s.id}`} aria-controls={`v-${s.id}`} aria-selected="false" tabindex="-1"><span>0{i + 2}</span>{s.t}</button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div class="cristal vista" role="tabpanel" id="v-captacion" aria-labelledby="p-captacion">
+          <div class="vista-txt">
+            <span class="vnum">01 · Captación</span>
+            <h3>Propietarios y compradores de tu zona, llegando a ti</h3>
+            <p>Campañas en Facebook e Instagram para la gente de tu zona. Quien se interesa deja sus datos y entra directamente en tu sistema.</p>
+            <ul class="vlista">
+              <li>propietarios que quieren vender o alquilar;</li>
+              <li>compradores e inquilinos;</li>
+              <li>anuncios nuevos cada mes, hechos con material de tu inmobiliaria;</li>
+              <li>informe mensual con lo que ha funcionado.</li>
+            </ul>
+            <a class="resultados" href={waResultados} target="_blank" rel="noopener"><IconoWhatsApp /><span>¿Quieres ver resultados de nuestras campañas? <b>Pídemelos por WhatsApp</b></span></a>
+            <button class="sig" type="button" data-sig="respuesta">Siguiente: respuesta al momento <Icono n="flecha" /></button>
+          </div>
+          <div class="vista-vis anuncio-vis">
+            <div class="anuncio anim-i" style="--i:0">
+              <div class="an-cab"><img src="/logo/vaxor-dorado.svg" alt="" width="28" height="28" /><div><b>Tu inmobiliaria</b><small>Publicidad</small></div></div>
+              <div class="an-img"><img src="/img/edificio-movil.webp" alt="" width="720" height="720" /><span>¿Pensando en vender<br /><em>tu piso este año?</em></span></div>
+              <div class="an-pie"><span>Te decimos cuánto vale, sin compromiso</span><b>Más información</b></div>
+            </div>
+            <div class="cristal tarjeta flot anim-i" style="--i:2"><div class="ic oro"><Icono n="personas" /></div><div><b>Nuevo propietario</b><small>Quiere vender · 3 hab. · centro</small></div></div>
+            <span class="ejemplo ej-vista">Ejemplo</span>
+          </div>
+        </div>
+
+        <div class="cristal vista" role="tabpanel" id="v-respuesta" aria-labelledby="p-respuesta" hidden>
+          <div class="vista-txt">
+            <span class="vnum">02 · Respuesta al momento</span>
+            <h3>Un propietario escribe a las 23:14</h3>
+            <p>Recibe respuesta en ese momento, venga de donde venga: tu WhatsApp, los portales o la web.</p>
+            <ul class="vlista">
+              <li>respuesta por WhatsApp, también de noche y en fin de semana;</li>
+              <li>preguntas para saber qué busca antes de que hables con él;</li>
+              <li>la cita o la llamada, directamente en tu calendario.</li>
+            </ul>
+            <button class="sig" type="button" data-sig="seguimiento">Siguiente: seguimiento <Icono n="flecha" /></button>
+          </div>
+          <div class="vista-vis">
+            <Movil clase="fundido" hora="23:14" nombre="Propietario" inicial="P" mensajes={[
+              { de: 'el', texto: 'Buenas noches, quiero alquilar mi piso. ¿Os encargáis vosotros?', hora: '23:14' },
+              { de: 'tu', texto: 'Hola! Sí, claro. Me dices en qué zona está y para cuándo te gustaría alquilarlo?', hora: '23:14' },
+              { de: 'el', texto: 'Zona estación, a partir de enero', hora: '23:15' },
+              { de: 'tu', texto: 'Genial. Te llamamos mañana a las 10:00 y lo vemos. Te va bien?', hora: '23:15' },
+            ]} />
+            <div class="cristal tarjeta flot anim-i" style="--i:5"><div class="ic"><Icono n="calendario" /></div><div><b>Mañana, 10:00</b><small>Llamada · alquiler zona estación</small></div></div>
+            <span class="ejemplo ej-vista">Ejemplo</span>
+          </div>
+        </div>
+
+        <div class="cristal vista" role="tabpanel" id="v-seguimiento" aria-labelledby="p-seguimiento" hidden>
+          <div class="vista-txt">
+            <span class="vnum">03 · Seguimiento</span>
+            <h3>Si no contesta, nadie tiene que acordarse</h3>
+            <p>Recibe un segundo mensaje a los dos días y otro a la semana. Si responde, te avisa y lo retomas tú.</p>
+            <ul class="vlista">
+              <li>mensajes cortos y sin presionar;</li>
+              <li>recordatorios a ti y al cliente antes de cada cita;</li>
+              <li>ningún contacto se queda a medias.</li>
+            </ul>
+            <button class="sig" type="button" data-sig="avisos">Siguiente: avisos en tu móvil <Icono n="flecha" /></button>
+          </div>
+          <div class="vista-vis">
+            <div class="linea">
+              <div class="lpaso anim-i" style="--i:0"><small>LUNES · 19:40</small><b>Pregunta por un piso</b><span>Respuesta al momento</span></div>
+              <div class="lpaso anim-i" style="--i:1"><small>MIÉRCOLES</small><b>No ha contestado</b><span>Segundo mensaje, con otra opción parecida</span></div>
+              <div class="lpaso anim-i" style="--i:2"><small>LUNES SIGUIENTE</small><b>Último mensaje</b><span>Corto y sin presionar</span></div>
+              <div class="lpaso fin anim-i" style="--i:3"><small>RESPONDE</small><b>Te llega el aviso</b><span>Y lo retomas tú</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cristal vista" role="tabpanel" id="v-avisos" aria-labelledby="p-avisos" hidden>
+          <div class="vista-txt">
+            <span class="vnum">04 · Avisos en tu móvil</span>
+            <h3>Te enteras de lo importante, al momento</h3>
+            <p>Cuando alguien quiere visita o llamada, te llega un aviso con su nombre, qué busca y cuándo.</p>
+            <ul class="vlista">
+              <li>todos los contactos en un solo sitio, también los de los portales y la web;</li>
+              <li>sabes en qué punto está cada uno;</li>
+              <li>tú solo hablas con quien está interesado de verdad.</li>
+            </ul>
+            <a class="btn oro" href="/consultoria">Quiero verlo en mi inmobiliaria <Icono n="flecha" /></a>
+          </div>
+          <div class="vista-vis avisos">
+            <span class="ejemplo ej-vista">Ejemplo</span>
+            <div class="aviso anim-i" style="--i:0"><div class="ic oro"><Icono n="campana" /></div><div><small>AHORA</small><b>Visita confirmada</b><span>Laura · piso 2 hab. · jueves 18:00</span></div></div>
+            <div class="aviso anim-i" style="--i:1"><div class="ic"><Icono n="telefono" /></div><div><small>HACE 12 MIN</small><b>Quiere que le llames</b><span>Marcos, propietario · vender casa</span></div></div>
+            <div class="aviso anim-i" style="--i:2"><div class="ic"><Icono n="lista" /></div><div><small>8:00</small><b>Tu resumen de hoy</b><span>2 llamadas, 1 visita y 3 contactos nuevos</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Diagnóstico (6 preguntas, una a una, con resultado por áreas) -->
+  <section id="diagnostico">
+    <div class="cont diag-cont">
+      <div class="cabeza rev">
+        <span class="etq">Diagnóstico gratuito</span>
+        <h2 class="tit">¿Dónde se te escapan <em>los clientes?</em></h2>
+        <p class="ent">Seis preguntas, un minuto. Al final ves cómo está tu inmobiliaria en captación, respuesta y seguimiento, y por dónde empezaría yo.</p>
+        <ul class="d-sellos"><li><Icono n="check" />Sin dejar tus datos</li><li><Icono n="check" />Resultado al momento</li></ul>
+      </div>
+      <div class="cristal diag rev" id="diag">
+        <div class="d-prog" id="d-prog">
+          <div class="d-prog-txt"><span id="d-paso">Pregunta 1 de {preguntas.length}</span><span id="d-area">Captación</span></div>
+          <div class="d-barra"><i id="d-barra"></i></div>
+        </div>
+        <form id="d-form">
+          {preguntas.map((q, i) => (
+            <fieldset class="dq" data-area={q.area} hidden={i > 0} tabindex="-1">
+              <legend>{q.p}</legend>
+              <div class="d-opc">
+                {q.o.map((o, j) => (
+                  <label><input type="radio" name={`q${i}`} value={2 - j} /><span class="letra" aria-hidden="true">{'ABC'[j]}</span><span>{o}</span></label>
+                ))}
+              </div>
+            </fieldset>
+          ))}
+          <button type="button" class="d-atras" id="d-atras" disabled>← Anterior</button>
+        </form>
+
+        <div class="d-res" id="d-res" hidden tabindex="-1" aria-live="polite">
+          <span class="vnum">Tu resultado</span>
+          <h3 id="d-tit"></h3>
+          <p id="d-txt"></p>
+          <div class="d-areas">
+            {areas.map(a => (
+              <div class="d-area" data-area={a.id}>
+                <div class="d-area-cab"><b>{a.t}</b><span class="d-est"></span></div>
+                <div class="d-area-barra"><i></i></div>
+              </div>
+            ))}
+          </div>
+          <div class="botones">
+            <a class="btn oro" id="d-btn" href="/consultoria">Verlo en la consultoría <Icono n="flecha" /></a>
+            <button type="button" class="btn vidrio" id="d-otra"><Icono n="repetir" /> Repetir</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Cómo trabajamos (pasos interactivos, avanzan solos mientras se ven) -->
+  <section id="como-trabajamos" class="fondo-alt">
+    <div class="cont">
+      <div class="cabeza centro rev">
+        <span class="etq">Cómo trabajamos</span>
+        <h2 class="tit">De la primera llamada <em>a tenerlo funcionando.</em></h2>
+        <p class="ent">Cuatro pasos y empezamos desde el primer día. Toca cada uno.</p>
+      </div>
+      <div class="pasos-int rev" id="pasos">
+        <div class="p-linea" role="tablist" aria-label="Cómo trabajamos">
+          <div class="p-riel" aria-hidden="true"><i id="p-riel"></i></div>
+          {pasos.map((p, i) => (
+            <button class="p-btn" role="tab" id={`t-paso-${i}`} aria-controls={`paso-${i}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}>
+              <span class="p-nodo"><Icono n={p.ic} /></span>
+              <span class="p-n">0{i + 1}</span>
+              <span class="p-t">{p.corto}</span>
+              <span class="p-reloj" aria-hidden="true"><i></i></span>
+            </button>
+          ))}
+        </div>
+
+        {pasos.map((p, i) => (
+          <div class="cristal p-panel" role="tabpanel" id={`paso-${i}`} aria-labelledby={`t-paso-${i}`} hidden={i > 0}>
+            <div class="p-txt">
+              <span class="vnum">Paso 0{i + 1} · {p.corto}</span>
+              <h3>{p.t}</h3>
+              <p>{p.d}</p>
+              <ul class="p-chips">{p.chips.map(c => <li><Icono n="check" />{c}</li>)}</ul>
+            </div>
+            <div class="p-vis">
+              {i === 0 && (
+                <div class="v-llamada anim-i" style="--i:0">
+                  <div class="vl-av"><img src="/logo/vaxor-dorado.svg" alt="" width="40" height="40" /></div>
+                  <b>Llamada con Eva</b><small>Consultoría · VAXOR</small>
+                  <div class="vl-ondas" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                  <div class="vl-temas">
+                    <span class="anim-i" style="--i:1">Cómo os llegan los clientes</span>
+                    <span class="anim-i" style="--i:2">Quién responde y cuándo</span>
+                    <span class="anim-i" style="--i:3">Dónde se escapan</span>
+                  </div>
+                  <span class="vl-dur">20 min</span>
+                </div>
+              )}
+              {i === 1 && (
+                <div class="v-doc anim-i" style="--i:0">
+                  <div class="vd-cab"><img src="/logo/vaxor-dorado.svg" alt="" width="32" height="32" /><div><b>Propuesta para tu inmobiliaria</b><small>Preparada a tu medida</small></div></div>
+                  <ul>
+                    <li class="anim-i" style="--i:1"><Icono n="check" />Captación de propietarios</li>
+                    <li class="anim-i" style="--i:2"><Icono n="check" />Respuesta al momento</li>
+                    <li class="anim-i" style="--i:3"><Icono n="check" />Seguimiento de cada contacto</li>
+                  </ul>
+                  <div class="vd-precio anim-i" style="--i:4"><span>Precio</span><b>Cerrado, sin sorpresas</b></div>
+                  <span class="vd-sello anim-i" style="--i:5">Sin permanencia</span>
+                </div>
+              )}
+              {i === 2 && (
+                <div class="v-marcha anim-i" style="--i:0">
+                  <div class="vm-cab"><b>Puesta en marcha</b><span>Desde el día 1</span></div>
+                  {['Tu WhatsApp', 'Tu calendario', 'Contactos de los portales', 'Campañas en tu zona'].map((x, k) => (
+                    <div class="vm-fila anim-i" style={`--i:${k + 1}`}><span class="vm-ok"><Icono n="check" /></span>{x}<small>Listo</small></div>
+                  ))}
+                  <div class="vm-barra"><i></i></div>
+                </div>
+              )}
+              {i === 3 && (
+                <div class="v-informe anim-i" style="--i:0">
+                  <div class="vi-cab"><b>Tu informe del mes</b><span class="ejemplo">Ejemplo</span></div>
+                  {[['Contactos nuevos', 92], ['Respondidos al momento', 100], ['Citas y llamadas', 58]].map(([x, w], k) => (
+                    <div class="vi-fila"><span>{x}</span><div class="vi-barra"><i style={`--w:${w}%; --i:${k + 1}`}></i></div></div>
+                  ))}
+                  <div class="vi-nota anim-i" style="--i:4"><Icono n="diana" /><span><b>Este mes mejoramos</b>Los anuncios con más respuesta</span></div>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Preguntas frecuentes -->
+  <section id="preguntas">
+    <script type="application/ld+json" set:html={faqDatos} />
+    <div class="cont faq-cont">
+      <div class="cabeza rev">
+        <span class="etq">Preguntas frecuentes</span>
+        <h2 class="tit">Lo que me preguntan <em>antes de empezar.</em></h2>
+        <p class="ent">¿Tienes otra duda? <a href={CONTACTO.whatsapp} target="_blank" rel="noopener">Escríbeme por WhatsApp</a> y te contesto yo.</p>
+      </div>
+      <div class="faq rev">
+        {faqs.map(f => (
+          <details><summary>{f.p}<span aria-hidden="true"></span></summary><p>{f.r}</p></details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Cierre -->
+  <section class="cierre">
+    <div class="foto" aria-hidden="true"><img src="/img/edificio.webp" srcset="/img/edificio-960.webp 960w, /img/edificio.webp 1920w" sizes="100vw" alt="" width="1920" height="1081" loading="lazy" /></div>
+    <div class="cont cierre-in rev">
+      <img class="cierre-logo" src="/logo/vaxor-luz-halo.svg" alt="" width="150" height="150" />
+      <h2 class="tit">Hablemos de tu inmobiliaria <em>y de los clientes que se te escapan.</em></h2>
+      <p class="ent">20 minutos, por teléfono y sin compromiso. Me cuentas cómo trabajáis y vemos juntos qué podría mejorar.</p>
+      <div class="botones">
+        <a class="btn oro" href="/consultoria">Solicitar consultoría <Icono n="flecha" /></a>
+        <a class="btn vidrio" href={CONTACTO.whatsapp} target="_blank" rel="noopener"><IconoWhatsApp /> Escríbeme por WhatsApp</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Comparador «Sin sistema / Con VAXOR»
+  const cambios = document.getElementById('cambios')!;
+  const modos = [...document.querySelectorAll<HTMLButtonElement>('.interruptor button')];
+  const ponerModo = (m: string) => {
+    cambios.dataset.modo = m;
+    modos.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.modo === m)));
+  };
+  modos.forEach(b => b.addEventListener('click', () => ponerModo(b.dataset.modo!)));
+  document.querySelector<HTMLButtonElement>('[data-modo-ir]')!.addEventListener('click', () => {
+    ponerModo('con');
+    document.querySelector('.prob-cab')!.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  // Pestañas de «Qué hacemos»
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>('.pestanas [role=tab]')];
+  const elegir = (t: HTMLButtonElement, foco = false) => {
+    tabs.forEach(x => {
+      const sel = x === t;
+      x.setAttribute('aria-selected', String(sel));
+      x.tabIndex = sel ? 0 : -1;
+      document.getElementById(x.getAttribute('aria-controls')!)!.hidden = !sel;
+    });
+    if (foco) t.focus();
+  };
+  const porId = (id: string) => tabs.find(t => t.id === 'p-' + id);
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => elegir(t));
+    t.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); elegir(tabs[(i + 1) % tabs.length], true); }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); elegir(tabs[(i - 1 + tabs.length) % tabs.length], true); }
+    });
+  });
+  // «Siguiente» dentro de cada vista y los cuatro pasos de la portada
+  document.querySelectorAll<HTMLElement>('[data-sig], [data-ir]').forEach(b => b.addEventListener('click', () => {
+    const t = porId(b.dataset.sig || b.dataset.ir!);
+    if (!t) return;
+    elegir(t);
+    if (b.dataset.sig) document.querySelector('.pestanas')!.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }));
+
+  // Cómo trabajamos: pasos que avanzan solos mientras se ven, hasta que alguien toca uno
+  const pasosCaja = document.getElementById('pasos')!;
+  const pBtns = [...pasosCaja.querySelectorAll<HTMLButtonElement>('.p-btn')];
+  const riel = document.getElementById('p-riel')!;
+  let pActual = 0, pTimer = 0, pVisible = false, pManual = false;
+  const quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const verPaso = (n: number, foco = false) => {
+    pActual = n;
+    pBtns.forEach((b, i) => {
+      b.setAttribute('aria-selected', String(i === n));
+      b.tabIndex = i === n ? 0 : -1;
+      b.classList.toggle('hecho', i < n);
+      document.getElementById(b.getAttribute('aria-controls')!)!.hidden = i !== n;
+    });
+    riel.style.width = `${(n / (pBtns.length - 1)) * 100}%`;
+    if (foco) pBtns[n].focus();
+  };
+  const programar = () => {
+    clearTimeout(pTimer);
+    pasosCaja.classList.toggle('auto', pVisible && !pManual && !quieto);
+    if (pVisible && !pManual && !quieto) pTimer = window.setTimeout(() => { verPaso((pActual + 1) % pBtns.length); programar(); }, 6500);
+  };
+  const parar = () => { pManual = true; programar(); };
+  pBtns.forEach((b, i) => {
+    b.addEventListener('click', () => { parar(); verPaso(i); });
+    b.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); parar(); verPaso((i + 1) % pBtns.length, true); }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); parar(); verPaso((i - 1 + pBtns.length) % pBtns.length, true); }
+    });
+  });
+  new IntersectionObserver(es => { pVisible = es[0].isIntersecting; programar(); }, { threshold: 0.45 }).observe(pasosCaja);
+  verPaso(0);
+
+  // Diagnóstico: una pregunta cada vez y resultado por áreas
+  const AREAS: Record<string, { n: string; mejorar: string; txt: string }> = {
+    captacion: { n: 'la captación', mejorar: 'propietarios', txt: 'Te faltan propietarios o dependes de que te llamen. Con campañas en tu zona, los propietarios que quieren vender o alquilar te escriben a ti.' },
+    respuesta: { n: 'la respuesta', mejorar: 'responder', txt: 'Hay contactos que esperan horas o días. Cuando les contestas, muchos ya han escrito a otra inmobiliaria.' },
+    seguimiento: { n: 'el seguimiento', mejorar: 'seguimiento', txt: 'Los contactos que no contestan a la primera se quedan por el camino. Con un seguimiento pautado, ninguno se queda a medias.' },
+  };
+  const NOMBRE_AREA: Record<string, string> = { captacion: 'Captación', respuesta: 'Respuesta', seguimiento: 'Seguimiento' };
+  const dForm = document.getElementById('d-form') as HTMLFormElement;
+  const dq = [...dForm.querySelectorAll<HTMLFieldSetElement>('.dq')];
+  const dProg = document.getElementById('d-prog')!;
+  const dRes = document.getElementById('d-res')!;
+  const dAtras = document.getElementById('d-atras') as HTMLButtonElement;
+  const dBtn = document.getElementById('d-btn') as HTMLAnchorElement;
+  const verPregunta = (n: number, foco = false) => {
+    dq.forEach((f, i) => (f.hidden = i !== n));
+    document.getElementById('d-paso')!.textContent = `Pregunta ${n + 1} de ${dq.length}`;
+    document.getElementById('d-area')!.textContent = NOMBRE_AREA[dq[n].dataset.area!];
+    (document.getElementById('d-barra') as HTMLElement).style.width = `${(n / dq.length) * 100}%`;
+    dAtras.disabled = n === 0;
+    if (foco) dq[n].focus();
+  };
+  const resultado = () => {
+    const puntos: Record<string, number> = { captacion: 0, respuesta: 0, seguimiento: 0 };
+    dq.forEach(f => (puntos[f.dataset.area!] += Number((f.querySelector('input:checked') as HTMLInputElement).value)));
+    const estado = (p: number) => (p >= 4 ? ['Bien', 'bien'] : p >= 2 ? ['Mejorable', 'medio'] : ['Aquí se escapan', 'mal']);
+    const peor = Object.keys(puntos).reduce((a, b) => (puntos[b] < puntos[a] ? b : a));
+    const resumen = Object.keys(puntos).map(a => `${NOMBRE_AREA[a]}: ${estado(puntos[a])[0].toLowerCase()}`).join(' · ');
+    if (puntos[peor] >= 3) {
+      document.getElementById('d-tit')!.textContent = 'Lo tienes bien encaminado.';
+      document.getElementById('d-txt')!.textContent = 'Tu inmobiliaria está bien en las tres áreas. Si quieres, lo repasamos juntos y vemos si hay algo que afinar.';
+      dBtn.href = '/consultoria?diag=' + encodeURIComponent(resumen);
+    } else {
+      document.getElementById('d-tit')!.textContent = `Por dónde empezaría yo: ${AREAS[peor].n}.`;
+      document.getElementById('d-txt')!.textContent = AREAS[peor].txt + ' En la consultoría lo vemos con tu caso concreto.';
+      const flojas = Object.keys(puntos).filter(a => puntos[a] < 4).sort((a, b) => puntos[a] - puntos[b]).map(a => AREAS[a].mejorar);
+      dBtn.href = `/consultoria?mejorar=${flojas.join(',')}&diag=${encodeURIComponent(resumen)}`;
+    }
+    dRes.querySelectorAll<HTMLElement>('.d-area').forEach(el => {
+      const p = puntos[el.dataset.area!];
+      const [txt, clase] = estado(p);
+      el.dataset.estado = clase;
+      el.querySelector('.d-est')!.textContent = txt;
+      const barra = el.querySelector('i') as HTMLElement;
+      barra.style.width = '0';
+      requestAnimationFrame(() => requestAnimationFrame(() => (barra.style.width = `${Math.max(8, (p / 4) * 100)}%`)));
+    });
+    dForm.hidden = true; dProg.hidden = true; dRes.hidden = false; dRes.focus({ preventScroll: true });
+  };
+  dForm.addEventListener('change', e => {
+    const i = dq.indexOf((e.target as HTMLElement).closest('fieldset') as HTMLFieldSetElement);
+    setTimeout(() => (i < dq.length - 1 ? verPregunta(i + 1, true) : resultado()), 320);
+  });
+  dAtras.addEventListener('click', () => verPregunta(Math.max(0, dq.findIndex(f => !f.hidden) - 1), true));
+  document.getElementById('d-otra')!.addEventListener('click', () => {
+    dForm.reset(); dForm.hidden = false; dProg.hidden = false; dRes.hidden = true; verPregunta(0, true);
+  });
+</script>
+
+<style>
+  /* Portada */
+  .hero { padding: 130px 0 40px; overflow: hidden; }
+  .hero-in { position: relative; z-index: 2; display: grid; gap: 56px; align-items: center; }
+  .hero-vis { position: relative; display: flex; justify-content: center; padding: 10px 0 30px; }
+  .hero-vis .movil.inclinado { transform: rotate(4deg); width: 290px; }
+  .tarjeta { position: absolute; display: flex; align-items: center; gap: 14px; padding: 12px 20px 12px 12px; border-radius: 12px; white-space: nowrap; z-index: 3;
+    background: rgba(26, 24, 22, .9); }
+  .tarjeta b { display: block; font-size: 15px; color: var(--tinta); line-height: 1.3; }
+  .tarjeta small { display: block; font-size: 13px; color: var(--tenue); }
+  .t1 { left: 0; top: 18%; } .t2 { right: 0; bottom: 4%; }
+  .ej-hero { position: absolute; right: 8px; top: 0; }
+  @media (max-width: 559px) { .t1 { left: -6px; top: 8%; } .t2 { right: -6px; bottom: 12%; } .tarjeta { padding: 9px 14px 9px 9px; } .tarjeta .ic { width: 38px; height: 38px; } }
+  @media (min-width: 960px) {
+    .hero { padding: 170px 0 56px; min-height: min(100vh, 1000px); display: flex; flex-direction: column; justify-content: center; }
+    .hero-in { grid-template-columns: 1.15fr .85fr; }
+    .hero-vis .movil.inclinado { width: 320px; }
+    .t1 { left: -40px; } .t2 { right: -20px; }
+  }
+  .pilares { position: relative; z-index: 2; list-style: none; display: grid; grid-template-columns: 1fr 1fr; margin-top: 56px;
+    border: 1px solid var(--linea); border-radius: 4px; background: rgba(15, 13, 11, .6); backdrop-filter: blur(10px); }
+  @media (min-width: 860px) { .pilares { grid-template-columns: repeat(4, 1fr); } }
+  .pilares li + li { border-left: 1px solid var(--linea); }
+  @media (max-width: 859px) { .pilares li:nth-child(3) { border-left: 0; } .pilares li:nth-child(n+3) { border-top: 1px solid var(--linea); } }
+  .pilares a { display: block; height: 100%; padding: 20px 22px; text-decoration: none; font-size: 12px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--tinta); transition: background .2s; }
+  .pilares a:hover { background: rgba(198, 157, 99, .1); }
+  .pilares span { display: block; font-family: var(--t); font-style: italic; font-weight: 500; font-size: 34px; letter-spacing: 0; text-transform: none; color: var(--oro); line-height: 1; margin-bottom: 10px; }
+
+  /* Lo que no se ve: comparador */
+  .prob-cab { display: grid; gap: 4px; margin-bottom: 40px; }
+  .prob-cab .cabeza { margin-bottom: 20px; }
+  @media (min-width: 960px) { .prob-cab { grid-template-columns: 1fr auto; align-items: end; gap: 40px; } .prob-cab .cabeza { margin-bottom: 0; } }
+  .interruptor { display: inline-flex; justify-self: start; padding: 5px; border-radius: 6px; border: 1px solid var(--linea); background: var(--sup); }
+  .interruptor button { padding: 11px 20px; border: 0; border-radius: 4px; background: none; cursor: pointer; font-weight: 600; font-size: 15px; color: var(--suave); transition: background .25s, color .25s; }
+  .interruptor button[aria-pressed="true"][data-modo="sin"] { background: rgba(220, 90, 75, .16); color: #f0b3a6; }
+  .interruptor button[aria-pressed="true"][data-modo="con"] { background: var(--oro); color: #0f0d0b; }
+  .rejilla-2 { display: grid; gap: 16px; }
+  @media (min-width: 760px) { .rejilla-2 { grid-template-columns: 1fr 1fr; gap: 20px; } }
+  .item { padding: 24px; transition: border-color .4s; }
+  .cara { display: flex; gap: 18px; }
+  .cara p { color: var(--suave); margin-top: 6px; font-size: 16px; }
+  .cambios[data-modo="sin"] .con, .cambios[data-modo="con"] .sin { display: none; }
+  .cambios .cara { animation: entra .45s ease; }
+  .cambios[data-modo="con"] .item { border-color: rgba(198, 157, 99, .55); }
+  .remate { margin-top: 44px; padding-left: 22px; border-left: 2px solid var(--oro); font-family: var(--t); font-style: italic; font-size: clamp(24px, 3.2vw, 30px); line-height: 1.3; color: var(--suave); }
+  .remate b { color: var(--oro); font-weight: 500; }
+  .remate .sig { font-style: normal; margin-left: 6px; vertical-align: middle; }
+
+  /* Qué hacemos */
+  .pestanas { display: flex; gap: 14px; overflow-x: auto; padding: 2px 2px 8px; margin-bottom: 18px; scrollbar-width: none; }
+  @media (min-width: 860px) { .pestanas { justify-content: center; gap: 24px; } }
+  .pestanas::-webkit-scrollbar { display: none; }
+  .grupo { flex: none; display: flex; flex-direction: column; gap: 8px; }
+  .grupo small { font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--tenue); padding-left: 2px; }
+  .grupo + .grupo { padding-left: 14px; border-left: 1px solid var(--linea); }
+  @media (min-width: 860px) { .grupo + .grupo { padding-left: 24px; } }
+  .g-btns { display: flex; gap: 8px; }
+  .pestanas button { flex: none; display: flex; align-items: center; gap: 10px; padding: 12px 20px; border-radius: 4px; cursor: pointer;
+    background: rgba(26, 24, 22, .8); border: 1px solid var(--linea); color: var(--suave); font-weight: 600; font-size: 15px; transition: border-color .2s, color .2s; }
+  .pestanas button:hover { border-color: rgba(198, 157, 99, .6); color: var(--tinta); }
+  .pestanas button span { font-family: var(--t); font-style: italic; font-size: 20px; font-weight: 500; color: var(--oro); line-height: 1; }
+  .pestanas button[aria-selected="true"] { color: #0f0d0b; background: var(--oro); border-color: var(--oro); }
+  .pestanas button[aria-selected="true"] span { color: #0f0d0b; }
+  .vista { display: grid; gap: 32px; padding: 28px 22px; overflow: hidden; animation: entra .45s ease; }
+  @keyframes entra { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .vista, .cambios .cara { animation: none; } }
+  @media (min-width: 860px) { .vista { grid-template-columns: 1fr 1fr; align-items: center; padding: 48px; min-height: 580px; } }
+  .vnum { display: block; font-size: 12px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--oro); margin-bottom: 12px; }
+  .vista h3 { font-family: var(--t); font-weight: 500; font-size: clamp(28px, 3.2vw, 36px); line-height: 1.15; }
+  .vista-txt > p { color: var(--suave); margin: 14px 0 18px; }
+  .vlista { list-style: none; display: grid; gap: 10px; margin-bottom: 26px; }
+  .vlista li { position: relative; padding-left: 26px; font-size: 16px; }
+  .vlista li::before { content: "✓"; position: absolute; left: 2px; top: 0; color: var(--oro); font-weight: 700; }
+  .resultados { display: flex; align-items: center; gap: 12px; padding: 12px 16px; margin-bottom: 24px; border-radius: 8px; border: 1px dashed rgba(198, 157, 99, .5);
+    text-decoration: none; font-size: 15px; color: var(--suave); transition: border-color .2s, background .2s; }
+  .resultados:hover { border-color: var(--oro); background: rgba(198, 157, 99, .07); }
+  .resultados :global(svg) { width: 22px; height: 22px; flex: none; color: var(--wa); }
+  .resultados b { color: var(--oro2); }
+  .sig { display: inline-flex; align-items: center; gap: 8px; text-align: left; background: none; border: 0; border-bottom: 1px solid rgba(198, 157, 99, .5); padding: 4px 0; cursor: pointer;
+    font-family: var(--f); font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--oro2); }
+  .sig:hover { color: var(--oro); border-color: var(--oro); }
+  .sig :global(svg) { width: 16px; height: 16px; }
+  .vista-vis { position: relative; display: flex; justify-content: center; padding-top: 38px; }
+  .vista-vis .movil { width: 270px; }
+  .vista-vis .flot { right: 0; bottom: 14%; }
+  .ej-vista { position: absolute; left: 0; top: 0; }
+  @media (max-width: 559px) { .vista-vis .flot { right: -6px; bottom: 10%; } }
+  .anuncio-vis { padding-bottom: 70px; }
+  .anuncio-vis .flot { bottom: 0; }
+  .anuncio { width: 300px; max-width: 100%; border-radius: 12px; overflow: hidden; background: #fff; color: #10151f; box-shadow: 0 40px 80px rgba(0, 0, 0, .55); }
+  .an-cab { display: flex; align-items: center; gap: 10px; padding: 12px 14px; }
+  .an-cab img { background: #0f0d0b; border-radius: 50%; padding: 4px; }
+  .an-cab b { display: block; font-size: 14px; line-height: 1.2; } .an-cab small { font-size: 12px; color: #6b7280; }
+  .an-img { position: relative; aspect-ratio: 1; display: flex; align-items: flex-end; padding: 22px; overflow: hidden; }
+  .an-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .an-img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15, 13, 11, 0) 30%, rgba(15, 13, 11, .85)); }
+  .an-img span { position: relative; z-index: 1; font-family: var(--t); font-weight: 500; font-size: 30px; line-height: 1.08; color: #fff; }
+  .an-img em { font-style: italic; font-weight: 500; color: var(--oro2); }
+  .an-pie { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; font-size: 13px; background: #f3f4f6; }
+  .an-pie b { flex: none; background: #e5e7eb; padding: 7px 12px; border-radius: 8px; font-size: 13px; }
+  .linea { width: 100%; max-width: 420px; }
+  .lpaso { position: relative; padding: 0 0 28px 52px; }
+  .lpaso::before { content: ""; position: absolute; left: 8px; top: 4px; width: 18px; height: 18px; border-radius: 50%; background: var(--fondo); border: 2px solid rgba(198, 157, 99, .7); }
+  .lpaso:not(:last-child)::after { content: ""; position: absolute; left: 16px; top: 28px; bottom: 2px; width: 2px; background: linear-gradient(180deg, rgba(198, 157, 99, .6), rgba(198, 157, 99, .15)); }
+  .lpaso.fin::before { background: var(--oro); border-color: var(--oro); box-shadow: 0 0 18px rgba(198, 157, 99, .7); }
+  .lpaso small { display: block; font-size: 12px; font-weight: 600; letter-spacing: .14em; color: var(--tenue); }
+  .lpaso b { display: block; font-size: 19px; font-weight: 600; line-height: 1.3; color: var(--tinta); margin-top: 2px; }
+  .lpaso.fin b { color: var(--oro2); }
+  .lpaso span { display: block; font-size: 15px; color: var(--suave); }
+  .avisos { flex-direction: column; gap: 12px; align-items: stretch; max-width: 420px; margin: 0 auto; width: 100%; }
+  .aviso { display: flex; gap: 14px; align-items: center; padding: 14px 16px; border-radius: 16px; background: rgba(247, 245, 241, .06); border: 1px solid var(--linea); backdrop-filter: blur(16px); }
+  .aviso small { display: block; font-size: 11px; font-weight: 600; letter-spacing: .14em; color: var(--tenue); }
+  .aviso b { display: block; font-size: 16px; color: var(--tinta); }
+  .aviso span { display: block; font-size: 14px; color: var(--suave); }
+
+  /* Diagnóstico */
+  .diag-cont { display: grid; gap: 8px; }
+  @media (min-width: 960px) { .diag-cont { grid-template-columns: .85fr 1.15fr; gap: 56px; align-items: center; } }
+  .d-sellos { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 22px; font-size: 15px; color: var(--suave); }
+  .d-sellos li { display: flex; align-items: center; gap: 8px; }
+  .d-sellos :global(svg) { width: 18px; height: 18px; color: var(--oro); }
+  .diag { padding: 26px 20px; min-height: 440px; }
+  @media (min-width: 600px) { .diag { padding: 40px; } }
+  .d-prog-txt { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--tenue); }
+  .d-prog-txt span:last-child { color: var(--oro); }
+  .d-barra { height: 4px; margin-top: 12px; border-radius: 4px; background: var(--sup2); overflow: hidden; }
+  .d-barra i { display: block; height: 100%; width: 0; background: var(--oro); transition: width .4s ease; }
+  .dq { border: 0; margin-top: 30px; outline: none; animation: entra .4s ease; }
+  .dq legend { font-family: var(--t); font-weight: 500; font-size: clamp(24px, 2.8vw, 29px); line-height: 1.2; margin-bottom: 22px; }
+  .d-opc { clear: both; display: grid; gap: 10px; }
+  .d-opc label { position: relative; cursor: pointer; display: flex; align-items: center; gap: 14px; padding: 15px 16px; border-radius: 8px; border: 1px solid var(--linea); background: rgba(15, 13, 11, .5);
+    font-size: 16px; transition: border-color .2s, background .2s; }
+  .d-opc label:hover { border-color: rgba(198, 157, 99, .65); background: rgba(198, 157, 99, .06); }
+  .d-opc input { position: absolute; opacity: 0; pointer-events: none; }
+  .d-opc label:has(input:focus-visible) { outline: 2px solid var(--oro); outline-offset: 2px; }
+  .letra { flex: none; width: 30px; height: 30px; border-radius: 6px; display: grid; place-items: center; font-size: 13px; font-weight: 700; border: 1px solid rgba(198, 157, 99, .5); color: var(--oro2); }
+  .d-opc label:has(input:checked) { border-color: var(--oro); background: rgba(198, 157, 99, .14); }
+  .d-opc label:has(input:checked) .letra { background: var(--oro); color: #0f0d0b; border-color: var(--oro); }
+  .d-atras { margin-top: 20px; background: none; border: 0; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--tenue); }
+  .d-atras:disabled { visibility: hidden; }
+  .d-atras:hover { color: var(--oro2); }
+  .d-res { outline: none; animation: entra .45s ease; }
+  .d-res h3 { font-family: var(--t); font-weight: 500; font-size: clamp(26px, 3vw, 32px); line-height: 1.15; }
+  .d-res > p { color: var(--suave); margin-top: 12px; }
+  .d-areas { display: grid; gap: 16px; margin: 28px 0 6px; }
+  .d-area-cab { display: flex; justify-content: space-between; font-size: 15px; margin-bottom: 8px; }
+  .d-est { font-weight: 600; }
+  .d-area-barra { height: 8px; border-radius: 8px; background: var(--sup2); overflow: hidden; }
+  .d-area-barra i { display: block; height: 100%; width: 0; border-radius: 8px; transition: width 1s cubic-bezier(.2, .8, .2, 1); }
+  .d-area[data-estado="bien"] i { background: var(--oro2); } .d-area[data-estado="bien"] .d-est { color: var(--oro2); }
+  .d-area[data-estado="medio"] i { background: var(--oro); } .d-area[data-estado="medio"] .d-est { color: var(--oro); }
+  .d-area[data-estado="mal"] i { background: #d9725f; } .d-area[data-estado="mal"] .d-est { color: #f0a594; }
+
+  /* Cómo trabajamos: pasos interactivos */
+  .p-linea { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); margin: 0 auto 26px; max-width: 900px; }
+  .p-riel { position: absolute; left: 12.5%; right: 12.5%; top: 31px; height: 2px; background: var(--linea); }
+  .p-riel i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--oro), var(--oro2)); transition: width .6s ease; }
+  .p-btn { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 0 4px 14px; background: none; border: 0; cursor: pointer; color: var(--suave); }
+  .p-nodo { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: var(--sup); border: 1px solid var(--linea);
+    box-shadow: 0 0 0 6px var(--fondo2); transition: background .3s, border-color .3s, transform .3s; }
+  .p-nodo :global(svg) { width: 26px; height: 26px; color: var(--tenue); transition: color .3s; }
+  .p-btn:hover .p-nodo { border-color: rgba(198, 157, 99, .7); }
+  .p-btn.hecho .p-nodo { border-color: var(--oro); }
+  .p-btn.hecho .p-nodo :global(svg) { color: var(--oro2); }
+  .p-btn[aria-selected="true"] .p-nodo { background: var(--oro); border-color: var(--oro); transform: scale(1.08); }
+  .p-btn[aria-selected="true"] .p-nodo :global(svg) { color: #0f0d0b; }
+  .p-n { font-family: var(--t); font-style: italic; font-size: 19px; color: var(--oro); line-height: 1; margin-top: 6px; }
+  .p-t { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; text-align: center; line-height: 1.3; }
+  .p-btn[aria-selected="true"] .p-t { color: var(--tinta); }
+  .p-reloj { position: absolute; bottom: 0; left: 50%; width: 46px; height: 2px; transform: translateX(-50%); background: transparent; overflow: hidden; border-radius: 2px; }
+  .auto .p-btn[aria-selected="true"] .p-reloj { background: var(--sup2); }
+  .auto .p-btn[aria-selected="true"] .p-reloj i { display: block; height: 100%; background: var(--oro); animation: reloj 6.5s linear both; }
+  @keyframes reloj { from { width: 0; } to { width: 100%; } }
+  @media (max-width: 559px) { .p-nodo { width: 52px; height: 52px; } .p-riel { top: 25px; } .p-t { font-size: 11px; letter-spacing: .03em; } }
+  .p-panel { display: grid; gap: 30px; padding: 28px 22px; animation: entra .45s ease; }
+  @media (min-width: 860px) { .p-panel { grid-template-columns: 1fr 1fr; align-items: center; padding: 44px 48px; min-height: 400px; } }
+  .p-txt h3 { font-family: var(--t); font-weight: 500; font-size: clamp(28px, 3.2vw, 36px); line-height: 1.15; }
+  .p-txt > p { color: var(--suave); margin: 12px 0 20px; font-size: 18px; }
+  .p-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+  .p-chips li { display: inline-flex; align-items: center; gap: 7px; padding: 8px 13px; border-radius: 999px; font-size: 14px; font-weight: 600; color: var(--oro2);
+    background: rgba(198, 157, 99, .1); border: 1px solid rgba(198, 157, 99, .35); }
+  .p-chips :global(svg) { width: 15px; height: 15px; }
+  .p-vis { display: flex; justify-content: center; }
+  .v-llamada, .v-doc, .v-marcha, .v-informe { width: 100%; max-width: 360px; border-radius: 16px; padding: 22px; background: var(--fondo); border: 1px solid var(--linea); box-shadow: 0 30px 60px rgba(0, 0, 0, .4); }
+  .v-llamada { position: relative; text-align: center; }
+  .vl-av { width: 72px; height: 72px; margin: 6px auto 12px; border-radius: 50%; display: grid; place-items: center; background: var(--sup2); border: 1px solid rgba(198, 157, 99, .5); box-shadow: 0 0 0 8px rgba(198, 157, 99, .08), 0 0 0 16px rgba(198, 157, 99, .04); }
+  .v-llamada b { display: block; font-size: 17px; } .v-llamada small { color: var(--tenue); font-size: 13px; }
+  .vl-ondas { display: flex; justify-content: center; align-items: center; gap: 4px; height: 30px; margin: 14px 0; }
+  .vl-ondas i { width: 4px; border-radius: 4px; background: var(--oro); animation: onda 1.1s ease-in-out infinite; }
+  .vl-ondas i:nth-child(odd) { animation-delay: .25s; } .vl-ondas i:nth-child(3n) { animation-delay: .5s; }
+  @keyframes onda { 0%, 100% { height: 6px; opacity: .5; } 50% { height: 26px; opacity: 1; } }
+  .vl-temas { display: grid; gap: 8px; text-align: left; }
+  .vl-temas span { padding: 9px 12px; border-radius: 8px; background: var(--sup); font-size: 14px; color: var(--suave); }
+  .vl-temas span::before { content: "• "; color: var(--oro); }
+  .vl-dur { position: absolute; top: 16px; right: 16px; font-size: 12px; font-weight: 700; color: var(--oro2); padding: 4px 10px; border-radius: 999px; border: 1px solid rgba(198, 157, 99, .4); }
+  .v-doc { position: relative; background: #f7f5f1; color: #1a1816; border: 0; }
+  .vd-cab { display: flex; gap: 12px; align-items: center; padding-bottom: 14px; border-bottom: 1px solid #e3ddd3; }
+  .vd-cab img { background: #0f0d0b; border-radius: 8px; padding: 5px; }
+  .vd-cab b { display: block; font-size: 15px; } .vd-cab small { color: #7a736a; font-size: 13px; }
+  .v-doc ul { list-style: none; display: grid; gap: 10px; margin: 16px 0; }
+  .v-doc li { display: flex; align-items: center; gap: 10px; font-size: 15px; }
+  .v-doc li :global(svg) { width: 18px; height: 18px; color: var(--oro-fuerte); }
+  .vd-precio { display: flex; justify-content: space-between; padding: 12px 14px; border-radius: 8px; background: #efe8dc; font-size: 14px; }
+  .vd-sello { position: absolute; right: -10px; top: 60px; transform: rotate(8deg); padding: 6px 12px; border: 2px solid var(--oro-fuerte); border-radius: 6px; color: var(--oro-fuerte);
+    font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; background: rgba(247, 245, 241, .92); }
+  .vm-cab, .vi-cab { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .vm-cab b, .vi-cab b { font-size: 16px; }
+  .vm-cab span { font-size: 12px; font-weight: 700; color: #0f0d0b; background: var(--oro); padding: 4px 10px; border-radius: 999px; }
+  .vm-fila { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--linea); font-size: 15px; }
+  .vm-fila small { margin-left: auto; color: var(--oro2); font-size: 12px; font-weight: 600; }
+  .vm-ok { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: var(--oro); flex: none; }
+  .vm-ok :global(svg) { width: 14px; height: 14px; color: #0f0d0b; stroke-width: 3; }
+  .vm-barra { height: 6px; margin-top: 18px; border-radius: 6px; background: var(--sup2); overflow: hidden; }
+  .vm-barra i { display: block; height: 100%; background: linear-gradient(90deg, var(--oro), var(--oro2)); animation: llena 2.6s ease .3s both; }
+  @keyframes llena { from { width: 0; } to { width: 100%; } }
+  .vi-fila { margin-bottom: 14px; font-size: 14px; color: var(--suave); }
+  .vi-barra { height: 10px; margin-top: 6px; border-radius: 10px; background: var(--sup2); overflow: hidden; }
+  .vi-barra i { display: block; height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--oro-fuerte), var(--oro2)); animation: crece 1.2s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--i) * .3s); }
+  @keyframes crece { from { width: 0; } to { width: var(--w); } }
+  .vi-nota { display: flex; gap: 12px; align-items: center; margin-top: 18px; padding: 12px 14px; border-radius: 10px; background: rgba(198, 157, 99, .1); border: 1px solid rgba(198, 157, 99, .35); font-size: 14px; color: var(--suave); }
+  .vi-nota :global(svg) { width: 22px; height: 22px; color: var(--oro); flex: none; }
+  .vi-nota b { display: block; color: var(--tinta); }
+  .js .rev:not(.ver) .vm-barra i, .js .rev:not(.ver) .vi-barra i { animation-play-state: paused; }
+  @media (prefers-reduced-motion: reduce) { .vl-ondas i, .vm-barra i, .vi-barra i, .p-panel { animation: none; } .vi-barra i { width: var(--w); } .vm-barra i { width: 100%; } }
+
+  /* Preguntas */
+  .faq-cont { display: grid; gap: 8px; }
+  @media (min-width: 960px) { .faq-cont { grid-template-columns: .8fr 1.2fr; gap: 56px; align-items: start; } .faq-cont .cabeza { position: sticky; top: 110px; } }
+  .faq-cont .ent a { color: var(--oro2); }
+  .faq { border-top: 1px solid var(--linea); }
+  .faq details { border-bottom: 1px solid var(--linea); }
+  .faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; gap: 16px; align-items: center; padding: 22px 2px; font-weight: 600; font-size: 18px; line-height: 1.35; transition: color .2s; }
+  .faq summary:hover { color: var(--oro2); }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary span { flex: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(198, 157, 99, .6); position: relative; }
+  .faq summary span::before, .faq summary span::after { content: ""; position: absolute; left: 8px; right: 8px; top: 13px; height: 1.5px; background: var(--oro2); transition: transform .2s; }
+  .faq summary span::after { transform: rotate(90deg); }
+  .faq details[open] summary span::after { transform: rotate(0); }
+  .faq details p { padding: 0 2px 24px; color: var(--suave); }
+
+  /* Cierre */
+  .cierre { overflow: hidden; text-align: center; padding: 130px 0; }
+  .cierre .foto::after { background: radial-gradient(ellipse at center, rgba(15, 13, 11, .72), rgba(15, 13, 11, .93) 70%), linear-gradient(180deg, var(--fondo), rgba(15, 13, 11, 0) 25%, rgba(15, 13, 11, 0) 75%, var(--fondo)); }
+  .cierre-in { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; }
+  .cierre-logo { width: 120px; height: 120px; margin-bottom: 18px; }
+  .cierre .ent { margin-left: auto; margin-right: auto; }
+  .cierre .botones { justify-content: center; }
+</style>

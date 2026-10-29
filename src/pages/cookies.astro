@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import { LEGAL } from '../config';
+---
+<Base titulo="Política de cookies" descripcion="Esta web no usa cookies de analítica ni de publicidad.">
+  <section style="padding-top: 140px">
+    <div class="cont texto">
+      <h1>Política de cookies</h1>
+      <p class="fecha">Última actualización: {LEGAL.actualizado}</p>
+
+      <h2>Qué son las cookies</h2>
+      <p>Las cookies son pequeños archivos que una web guarda en tu navegador para recordar información sobre tu visita.</p>
+
+      <h2>Qué cookies usa esta web</h2>
+      <p><b>Ninguna de analítica, de publicidad ni de seguimiento.</b> Esta web no instala cookies propias. Las tipografías se sirven desde la propia web, sin conectar con servicios de terceros.</p>
+      <p>El proveedor de alojamiento (Netlify) puede usar mecanismos técnicos imprescindibles para servir la web de forma segura. Al ser estrictamente necesarios, no requieren tu consentimiento.</p>
+
+      <h2>Enlaces a otros servicios</h2>
+      <p>Si pulsas en los enlaces a WhatsApp o a Calendly, sales de esta web y se aplican las políticas de cookies de esos servicios.</p>
+
+      <h2>Cómo gestionarlas</h2>
+      <p>Puedes ver y borrar las cookies desde la configuración de tu navegador. Si tienes cualquier duda, escribe a <a href={`mailto:${LEGAL.email}`}>{LEGAL.email}</a>.</p>
+    </div>
+  </section>
+</Base>

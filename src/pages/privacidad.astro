@@ -1,0 +1,77 @@
+---
+import Base from '../layouts/Base.astro';
+import { LEGAL, SITIO } from '../config';
+---
+<Base titulo="Política de privacidad" descripcion="Cómo trata VAXOR los datos personales: qué datos, para qué, cuánto tiempo y cómo ejercer tus derechos.">
+  <section style="padding-top: 140px">
+    <div class="cont texto">
+      <h1>Política de privacidad</h1>
+      <p class="fecha">Última actualización: {LEGAL.actualizado}</p>
+
+      <h2>1. Responsable del tratamiento</h2>
+      <ul>
+        <li><b>Responsable:</b> VAXOR ({LEGAL.titular})</li>
+        <li><b>Correo de contacto:</b> <a href={`mailto:${LEGAL.email}`}>{LEGAL.email}</a></li>
+        <li><b>Web:</b> {SITIO.url}</li>
+      </ul>
+
+      <h2>2. Qué datos tratamos</h2>
+      <p><b>Datos que nos facilitas en el formulario de consultoría:</b> nombre, inmobiliaria, zona, correo electrónico, teléfono, lo que te gustaría mejorar y lo que decidas contarnos.</p>
+      <p><b>Datos que nos facilitas directamente</b> cuando nos escribes por correo electrónico o WhatsApp, o cuando reservas una llamada a través de Calendly: nombre, correo, teléfono y la información que decidas contarnos.</p>
+      <p><b>Datos de contacto profesional</b> de empresas y profesionales del sector inmobiliario: nombre del negocio, nombre y cargo de la persona de contacto, correo electrónico, teléfono, web y perfiles públicos. Los obtenemos de fuentes accesibles al público, como la web del propio negocio, su ficha en Google Maps o directorios profesionales.</p>
+      <p>Esta web no usa cookies de analítica ni de publicidad. Más información en la <a href="/cookies">política de cookies</a>.</p>
+
+      <h2>3. Para qué los usamos y con qué base legal</h2>
+      <div class="tabla-scroll">
+        <table>
+          <thead><tr><th>Finalidad</th><th>Base legal</th></tr></thead>
+          <tbody>
+            <tr><td>Responder a tu solicitud de consultoría, escribirte para organizar la llamada y enviarte la información que nos pides</td><td>Tu consentimiento al enviar el formulario y la aplicación de medidas precontractuales a petición tuya (art. 6.1.a y 6.1.b RGPD)</td></tr>
+            <tr><td>Responder a tus mensajes y organizar las llamadas que reserves</td><td>Tu consentimiento y la aplicación de medidas precontractuales a petición tuya (art. 6.1.a y 6.1.b RGPD)</td></tr>
+            <tr><td>Contactar con negocios inmobiliarios para presentarles nuestros servicios</td><td>Interés legítimo en dar a conocer nuestros servicios a profesionales del sector (art. 6.1.f RGPD). Puedes oponerte en cualquier momento</td></tr>
+            <tr><td>Prestar los servicios contratados</td><td>Ejecución del contrato (art. 6.1.b RGPD)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>No tomamos decisiones automatizadas que produzcan efectos jurídicos sobre ti. No vendemos ni cedemos tus datos a terceros para sus propios fines.</p>
+
+      <h2>4. Cuánto tiempo los conservamos</h2>
+      <ul>
+        <li>Si nos dices que no te interesa o te opones, dejamos de contactarte y conservamos solo lo imprescindible para no volver a escribirte.</li>
+        <li>Los datos de posibles clientes, incluidos los del formulario, se conservan mientras exista una conversación abierta y, como máximo, dos años desde el último contacto.</li>
+        <li>Los datos de clientes se conservan mientras dure la relación y, después, durante los plazos que exija la ley.</li>
+      </ul>
+
+      <h2>5. Quién más puede acceder a los datos</h2>
+      <p>Usamos proveedores que tratan datos por cuenta nuestra, con las garantías que exige la normativa:</p>
+      <ul>
+        <li><b>Netlify:</b> alojamiento de esta web.</li>
+        <li><b>IONOS:</b> correo electrónico y dominio.</li>
+        <li><b>Hostinger:</b> servidor donde funcionan nuestras herramientas, incluida la recepción del formulario.</li>
+        <li><b>Google:</b> hojas de cálculo y calendario.</li>
+        <li><b>Calendly:</b> reserva de llamadas.</li>
+        <li><b>Meta (WhatsApp Business):</b> mensajería.</li>
+        <li><b>Telegram:</b> avisos internos.</li>
+        <li><b>Anthropic:</b> herramienta de redacción y análisis de textos.</li>
+      </ul>
+      <p>Algunos de estos proveedores pueden tratar datos fuera del Espacio Económico Europeo, por ejemplo en Estados Unidos. Lo hacen con las garantías previstas en el RGPD, como el Marco de Privacidad de Datos UE-EE. UU. o las cláusulas contractuales tipo de la Comisión Europea.</p>
+
+      <h2>6. Uso de datos de Google</h2>
+      <p>Nuestras herramientas internas acceden a las cuentas de Google de VAXOR (Hojas de cálculo, Drive y Calendar) únicamente para guardar y organizar los contactos y las citas de VAXOR. El uso que hacemos de la información recibida de las API de Google cumple la <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Política de datos de usuario de los servicios de API de Google</a>, incluidos sus requisitos de uso limitado. No usamos esos datos para publicidad ni los transferimos a terceros, salvo a los proveedores indicados para prestar el servicio.</p>
+
+      <h2>7. Tus derechos</h2>
+      <p>Puedes pedirnos en cualquier momento:</p>
+      <ul>
+        <li>acceder a tus datos;</li>
+        <li>rectificarlos o suprimirlos;</li>
+        <li>oponerte a su tratamiento o limitarlo;</li>
+        <li>portarlos a otro responsable;</li>
+        <li>retirar tu consentimiento, sin que afecte a lo tratado antes.</li>
+      </ul>
+      <p>Para hacerlo, escribe a <a href={`mailto:${LEGAL.email}`}>{LEGAL.email}</a>. Te responderemos en el plazo máximo de un mes. Si crees que no hemos atendido bien tu solicitud, puedes reclamar ante la Agencia Española de Protección de Datos (<a href="https://www.aepd.es" target="_blank" rel="noopener">www.aepd.es</a>).</p>
+
+      <h2>8. Cambios</h2>
+      <p>Si cambiamos esta política, publicaremos la nueva versión en esta página con su fecha de actualización.</p>
+    </div>
+  </section>
+</Base>

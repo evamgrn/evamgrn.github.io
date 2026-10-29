@@ -1,0 +1,40 @@
+---
+// Móvil con un chat de WhatsApp de ejemplo (como en el carrusel)
+interface Msg { de: 'el' | 'tu'; texto: string; hora: string }
+interface Props { hora: string; nombre: string; inicial: string; estado?: string; dia?: string; mensajes: Msg[]; clase?: string }
+const { hora, nombre, inicial, estado = 'en línea', dia = 'HOY', mensajes, clase = '' } = Astro.props;
+---
+<div class={`movil ${clase}`} role="img" aria-label={`Ejemplo de conversación de WhatsApp con ${nombre}`}>
+  <div class="pant">
+    <div class="isla"></div>
+    <div class="barra"><span>{hora}</span><span>•••</span></div>
+    <div class="mcab"><div class="av">{inicial}</div><div><b>{nombre}</b><small>{estado}</small></div></div>
+    <div class="chat">
+      <span class="dia">{dia}</span>
+      {mensajes.map((m, i) => <div class={`msg ${m.de} anim-i`} style={`--i:${i + 1}`}>{m.texto}<i>{m.hora}</i></div>)}
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .movil { position: relative; width: 300px; max-width: 100%; aspect-ratio: 300 / 600; border-radius: 46px; padding: 11px;
+    background: linear-gradient(150deg, #4a443d, #141210 40%, #2c2824); box-shadow: 0 50px 90px rgba(0, 0, 0, .6), inset 0 0 0 2px rgba(255, 255, 255, .08); }
+  .movil .pant { position: relative; height: 100%; border-radius: 36px; overflow: hidden; background: #0b141a; }
+  .movil .isla { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 34%; height: 26px; border-radius: 16px; background: #000; }
+  .movil .barra { display: flex; justify-content: space-between; padding: 14px 26px 0; font-weight: 600; font-size: 14px; color: #fff; }
+  .movil .mcab { display: flex; align-items: center; gap: 10px; padding: 20px 16px 12px; border-bottom: 1px solid rgba(255, 255, 255, .07); }
+  .movil .av { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 14px; color: #fff;
+    background: linear-gradient(160deg, var(--oro2), var(--oro-fuerte)); color: #0f0d0b; flex: none; }
+  .movil .mcab b { display: block; font-size: 15px; line-height: 1.2; color: #fff; }
+  .movil .mcab small { font-size: 12px; color: rgba(255, 255, 255, .5); }
+  .movil .chat { display: flex; flex-direction: column; gap: 8px; padding: 12px; }
+  .movil .dia { align-self: center; font-size: 10px; font-weight: 600; letter-spacing: .12em; color: rgba(255, 255, 255, .55); background: rgba(255, 255, 255, .07); padding: 4px 10px; border-radius: 8px; }
+  .movil .msg { max-width: 86%; padding: 8px 11px 18px; border-radius: 12px; font-size: 13px; line-height: 1.35; color: #f2f5f9; position: relative; }
+  .movil .msg i { position: absolute; right: 9px; bottom: 3px; font-style: normal; font-size: 10px; color: rgba(255, 255, 255, .5); }
+  .movil .msg.el { align-self: flex-start; background: #202c33; border-top-left-radius: 3px; }
+  .movil .msg.tu { align-self: flex-end; background: #005c4b; border-top-right-radius: 3px; }
+  .movil .msg.tu i::after { content: " ✓✓"; color: #53bdeb; }
+  .movil.fundido { -webkit-mask-image: linear-gradient(180deg, #000 72%, transparent 98%); mask-image: linear-gradient(180deg, #000 72%, transparent 98%); }
+  .ejemplo { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--tenue);
+    border: 1px solid var(--linea); border-radius: 999px; padding: 4px 10px; background: rgba(15, 13, 11, .6); }
+</style>
