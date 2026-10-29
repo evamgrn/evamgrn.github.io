@@ -42,6 +42,10 @@ const anio = new Date().getFullYear();
   <meta name="twitter:description" content={descripcion} />
   <meta name="twitter:image" content={imagen} />
   <script is:inline>document.documentElement.classList.add('js')</script>
+  <!-- Enlace de la bio de Instagram: quien abre la portada desde Instagram llega directo a la consultoría (si ya navegaba por la web, no) -->
+  <script is:inline>
+    if (/Instagram/.test(navigator.userAgent) && /^\/(index(\.html)?)?$/.test(location.pathname) && !location.hash && document.referrer.indexOf('//' + location.host) < 0) location.replace('/consultoria' + location.search);
+  </script>
 </head>
 <body>
   <a class="saltar" href="#principal">Ir al contenido</a>
