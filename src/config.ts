@@ -10,7 +10,7 @@ export const SITIO = {
 export const CONTACTO = {
   email: 'eva@teamvaxor.es',
   whatsappNumero: '+34 605 09 56 87',
-  whatsapp: 'https://wa.me/34605095687?text=Hola%2C%20te%20escribo%20desde%20la%20web%20de%20VAXOR',
+  whatsapp: 'https://wa.me/34605095687?text=Hola!%20Te%20escribo%20desde%20la%20web',
   calendly: 'https://calendly.com/eva-teamvaxor/hablemos',
   duracionLlamada: '20 minutos',
 };
