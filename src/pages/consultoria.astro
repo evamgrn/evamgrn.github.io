@@ -24,7 +24,7 @@ const pasos = [
           <li class="cristal"><Icono n="telefono" /><span><b>Por teléfono</b>o videollamada</span></li>
           <li class="cristal"><Icono n="mano" /><span><b>Sin compromiso</b>ni permanencia</span></li>
         </ul>
-        <p class="alt">También puedes <a href={CONTACTO.calendly} target="_blank" rel="noopener">reservar directamente la llamada</a> o <a href={CONTACTO.whatsapp} target="_blank" rel="noopener">escribirme por WhatsApp</a>.</p>
+        <p class="alt">Si lo prefieres, <a href={CONTACTO.whatsapp} target="_blank" rel="noopener">escríbeme directamente por WhatsApp</a>.</p>
       </div>
 
       <div class="cristal caja" id="caja">
@@ -58,19 +58,17 @@ const pasos = [
         <div class="gracias" id="gracias" hidden tabindex="-1">
           <div class="ic oro"><Icono n="check" /></div>
           <h2 class="tit"><span id="g-nombre">Gracias.</span> <em>Te escribo hoy mismo por WhatsApp.</em></h2>
-          <p>Si lo prefieres, reserva ya tu llamada o escríbeme tú.</p>
+          <p>Si no quieres esperar, escríbeme tú directamente.</p>
           <div class="botones">
-            <a class="btn oro" href={CONTACTO.calendly} target="_blank" rel="noopener"><Icono n="calendario" /> Reservar llamada</a>
             <a class="btn vidrio" href={CONTACTO.whatsapp} target="_blank" rel="noopener"><IconoWhatsApp /> Escribirme por WhatsApp</a>
           </div>
         </div>
 
         <div class="gracias" id="fallo" hidden tabindex="-1">
           <h2 class="tit">No se ha podido <em>enviar el formulario.</em></h2>
-          <p>Escríbeme por WhatsApp o reserva directamente tu llamada y lo vemos.</p>
+          <p>Escríbeme por WhatsApp y lo vemos.</p>
           <div class="botones">
             <a class="btn oro" href={CONTACTO.whatsapp} target="_blank" rel="noopener"><IconoWhatsApp /> Escribirme por WhatsApp</a>
-            <a class="btn vidrio" href={CONTACTO.calendly} target="_blank" rel="noopener"><Icono n="calendario" /> Reservar llamada</a>
           </div>
         </div>
       </div>
